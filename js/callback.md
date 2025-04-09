@@ -10,9 +10,9 @@
 
 function fetchData(callback) {
 
-setTimeout(() =\> {
+  setTimeout(() =\> {
 
-callback(\"Data loaded\");
+    callback(\"Data loaded\");
 
 }, 1000);
 
@@ -28,18 +28,18 @@ console.log(message); // Data loaded
 
 setTimeout(() =\> {
 
-console.log(\"Step 1\");
+  console.log(\"Step 1\");
 
-setTimeout(() =\> {
+    setTimeout(() =\> {
 
-console.log(\"Step 2\");
+      console.log(\"Step 2\");
 
-setTimeout(() =\> {
+        setTimeout(() =\> {
 
-console.log(\"Step 3\");
+          console.log(\"Step 3\");
 
-}, 1000);
+        }, 1000);
 
-}, 1000);
+    }, 1000);
 
 }, 1000);
