@@ -1,7 +1,32 @@
 **🧱 1. Error Boundaries (Class Components Only)**
 
-Used to catch **render-time errors** in child components and display a
-fallback UI.
+What are Error Boundaries?
+Error Boundaries are React components that catch JavaScript errors anywhere in their child component tree, log those errors, and display a fallback UI instead of crashing the whole app.
+
+They only catch errors in:
+
+Render methods
+
+Lifecycle methods
+
+Constructors of class components
+
+✅ They do NOT catch errors in:
+
+Event handlers
+
+Asynchronous code like setTimeout, fetch, etc.
+
+import ErrorBoundary from "./ErrorBoundary";
+import MyComponent from "./MyComponent";
+
+function App() {
+  return (
+    <ErrorBoundary>
+      <MyComponent />
+    </ErrorBoundary>
+  );
+}
 
 **✅ Key Lifecycle Methods:**
 
