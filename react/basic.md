@@ -76,6 +76,20 @@ It enables:
 
 -   **Priority-based updates**
 
+Paste your rich text content here
+
+**React Fiber** is the **reconciliation engine** in React — basically, it's the core of how React updates the UI. It was a complete rewrite of React’s rendering engine introduced in **React 16**.
+
+  
+
+### How React Fiber works (simple version):
+
+Instead of rendering everything in one go, Fiber breaks work into **units**, then processes them **piece by piece**.
+
+Imagine React is a painter. Before Fiber, the painter had to finish the entire painting in one go. Now, with Fiber, the painter can **pause**, check if there's a more urgent task, do that first, then continue the painting.
+
+  
+
 **✅ What are props in React?**
 
 **Props (properties)** are **read-only data** passed from parent to
