@@ -82,7 +82,6 @@ return isAuthenticated ? children : &lt;Navigate to="/login" /&gt;;
 
 Example:
 
-jsx
 
 const navigate = useNavigate();
 
@@ -200,6 +199,25 @@ const goToProfile = () =&gt; navigate('/profile');
 return &lt;button onClick={goToProfile}&gt;Go to Profile&lt;/button&gt;;
 
 };
+**Link** is a React component from react-router-dom that's used to create navigation links in your JSX. It’s like an anchor tag (), but it prevents a full page reload and lets React Router handle the route change smoothly.
+
+Example:
+
+Plain textANTLR4BashCC#CSSCoffeeScriptCMakeDartDjangoDockerEJSErlangGitGoGraphQLGroovyHTMLJavaJavaScriptJSONJSXKotlinLaTeXLessLuaMakefileMarkdownMATLABMarkupObjective-CPerlPHPPowerShell.propertiesProtocol BuffersPythonRRubySass (Sass)Sass (Scss)SchemeSQLShellSwiftSVGTSXTypeScriptWebAssemblyYAMLXML`   jsxCopyEditAbout   `
+
+You use this when you want users to click and go to another page.
+
+**useNavigate** is a hook also from react-router-dom. You use it inside a function (like after submitting a form) to programmatically navigate to another route.
+
+Example:
+
+Plain textANTLR4BashCC#CSSCoffeeScriptCMakeDartDjangoDockerEJSErlangGitGoGraphQLGroovyHTMLJavaJavaScriptJSONJSXKotlinLaTeXLessLuaMakefileMarkdownMATLABMarkupObjective-CPerlPHPPowerShell.propertiesProtocol BuffersPythonRRubySass (Sass)Sass (Scss)SchemeSQLShellSwiftSVGTSXTypeScriptWebAssemblyYAMLXML`   jsxCopyEditconst navigate = useNavigate();  const handleSubmit = () => {    // after some logic    navigate('/dashboard');  };   `
+
+So basically:
+
+*   Use Link when you're navigating through the UI (clickable links).
+    
+*   Use useNavigate when you need to redirect in code after some action or logic.
 
 🔢 4. URL Params (useParams)
 ---------------------------
