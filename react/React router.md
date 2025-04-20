@@ -201,9 +201,6 @@ return &lt;button onClick={goToProfile}&gt;Go to Profile&lt;/button&gt;;
 };
 **Link** is a React component from react-router-dom that's used to create navigation links in your JSX. It’s like an anchor tag (), but it prevents a full page reload and lets React Router handle the route change smoothly.
 
-Example:
-
-Plain textANTLR4BashCC#CSSCoffeeScriptCMakeDartDjangoDockerEJSErlangGitGoGraphQLGroovyHTMLJavaJavaScriptJSONJSXKotlinLaTeXLessLuaMakefileMarkdownMATLABMarkupObjective-CPerlPHPPowerShell.propertiesProtocol BuffersPythonRRubySass (Sass)Sass (Scss)SchemeSQLShellSwiftSVGTSXTypeScriptWebAssemblyYAMLXML`   jsxCopyEditAbout   `
 
 You use this when you want users to click and go to another page.
 
@@ -211,7 +208,7 @@ You use this when you want users to click and go to another page.
 
 Example:
 
-Plain textANTLR4BashCC#CSSCoffeeScriptCMakeDartDjangoDockerEJSErlangGitGoGraphQLGroovyHTMLJavaJavaScriptJSONJSXKotlinLaTeXLessLuaMakefileMarkdownMATLABMarkupObjective-CPerlPHPPowerShell.propertiesProtocol BuffersPythonRRubySass (Sass)Sass (Scss)SchemeSQLShellSwiftSVGTSXTypeScriptWebAssemblyYAMLXML`   jsxCopyEditconst navigate = useNavigate();  const handleSubmit = () => {    // after some logic    navigate('/dashboard');  };   `
+useNavigate();  const handleSubmit = () => {    // after some logic    navigate('/dashboard');  };   `
 
 So basically:
 
