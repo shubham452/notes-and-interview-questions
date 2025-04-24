@@ -11,11 +11,12 @@ URL state in sync with the UI.
 
 **2. What is the difference between BrowserRouter and HashRouter?**
 
-  **Feature**      **BrowserRouter**                         **HashRouter**
-  ---------------- ----------------------------------------- ---------------------------------
-  URL Format       Uses clean URLs (/about)                  Uses hash-based URLs (\#/about)
-  Server Support   Requires server-side support for routes   No server support needed
-  History API      Uses HTML5 History API                    Uses hash portion of the URL
+ | Feature         | Clean URLs (`/about`)           | Hash-based URLs (`#/about`)        |
+|----------------|----------------------------------|------------------------------------|
+| URL Format     | Uses clean URLs (`/about`)       | Uses hash-based URLs (`#/about`)   |
+| Server Support | Requires server-side support for routes | No server support needed       |
+| History API    | Uses HTML5 History API           | Uses hash portion of the URL       |
+
 
 **3. How do you handle route parameters in React Router?**
 
@@ -75,10 +76,11 @@ return isAuthenticated ? children : &lt;Navigate to="/login" /&gt;;
 
 **6. What is the difference between useNavigate and useHistory?**
 
-  **Hook**      **React Router Version**   **Description**
-  ------------- -------------------------- ---------------------------------------
-  useHistory    v5                         Used to access navigation history
-  useNavigate   v6+                        Replaces useHistory, more declarative
+ | **Hook**       | **React Router Version** | **Description**                            |
+|----------------|---------------------------|--------------------------------------------|
+| `useHistory`   | v5                        | Used to access navigation history          |
+| `useNavigate`  | v6+                       | Replaces `useHistory`, more declarative    |
+
 
 Example:
 
@@ -92,11 +94,12 @@ navigate('/home');
 
 ### ✅ Core Components
 
-  **Component**   **Purpose**
-  --------------- -------------------------------------------------------------
-  BrowserRouter   Wraps the app to enable routing using the HTML5 history API
-  Routes          Replaces Switch (v6+). Holds all the route definitions
-  Route           Defines a single route path and the element to render
+| **Component**    | **Purpose**                                                             |
+|------------------|--------------------------------------------------------------------------|
+| `BrowserRouter`  | Wraps the app to enable routing using the HTML5 history API             |
+| `Routes`         | Replaces `Switch` (v6+). Holds all the route definitions                |
+| `Route`          | Defines a single route path and the element to render                   |
+
 
 ### 🔰 Example:
 
