@@ -1,3 +1,18 @@
+# 🔁 Redux vs Redux Toolkit vs Redux Thunk vs Redux Saga
+
+| **Feature**       | **Redux**                        | **Redux Toolkit (RTK)**               | **Redux Thunk**                      | **Redux Saga**                                   |
+|------------------|----------------------------------|---------------------------------------|--------------------------------------|--------------------------------------------------|
+| **Type**         | State management library         | Official abstraction over Redux       | Middleware for async logic           | Middleware for complex async flows               |
+| **Purpose**      | Centralized state container      | Simplifies Redux setup                | Handle async actions via functions   | Handle complex side-effects using generators     |
+| **Boilerplate**  | ✅ A lot                         | ❌ Minimal                            | Works with Redux                     | Works with Redux                                 |
+| **Async Handling** | ❌ Not built-in                | ✅ via `createAsyncThunk`             | ✅                                    | ✅                                                |
+| **Learning Curve** | Moderate                      | Very Easy                             | Easy                                  | Advanced                                          |
+| **Code Style**   | Manual actions, reducers         | Opinionated, auto-generated reducers | Functions                             | Generator functions (`yield`)                    |
+| **Best For**     | Full control, customization      | Most real-world apps                  | Simple API/data fetching             | Advanced workflows (cancel, retry, debounce...)  |
+| **DevTools Support** | ✅                          | ✅                                    | ✅                                    | ✅                                                |
+
+
+
 **🗃️ Redux**
 
 **1. What is Redux, and why is it used?**
