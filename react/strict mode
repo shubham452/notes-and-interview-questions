@@ -1,0 +1,182 @@
+✅ React.StrictMode – Master Notes
+Covers: Lifecycle checks, side-effects, concurrent prep, effect cleanup testing, and best practices.
+
+🔰 1. What is React.StrictMode?
+<React.StrictMode> is a development-only helper wrapper that helps identify potential problems in your React components.
+
+jsx
+Copy
+Edit
+<React.StrictMode>
+  <App />
+</React.StrictMode>
+🔍 Detects unsafe lifecycle methods
+
+⚠️ Warns about deprecated APIs
+
+🔁 Double-invokes useEffect, componentDidMount, etc.
+
+🧼 Checks for memory leaks and cleanup issues
+
+✅ Does not render anything in UI or affect production builds.
+
+🛠️ 2. Why Use StrictMode?
+StrictMode:
+
+Surfaces unexpected side-effects
+
+Helps make your app ready for Concurrent Rendering
+
+Assists in migrating legacy code
+
+🚫 Does not block rendering, but logs warnings in console.
+
+🧪 3. How StrictMode Works
+🔁 Re-invokes rendering logic:
+Triggers useEffect / componentDidMount / componentWillUnmount
+
+Detects impure rendering or leaking effects
+
+❌ Flags the following legacy lifecycle methods as unsafe:
+Deprecated Lifecycle Methods
+componentWillMount
+componentWillReceiveProps
+componentWillUpdate
+
+Use alternatives like:
+
+componentDidMount
+
+getDerivedStateFromProps
+
+useEffect
+
+⚙️ 4. Behavior with useEffect
+StrictMode tests cleanup logic by:
+
+js
+Copy
+Edit
+useEffect(() => {
+  console.log('Effect ran');
+  return () => console.log('Cleanup');
+}, []);
+Expected console:
+
+nginx
+Copy
+Edit
+Effect ran
+Cleanup
+Effect ran
+✅ Only in development
+❌ Not repeated in production
+
+🧼 5. Detecting Side Effects
+StrictMode helps detect:
+
+Async effects that don’t clean up
+
+DOM mutations outside useEffect
+
+Using useLayoutEffect where useEffect would suffice
+
+🧱 6. Testing Cleanup and Mounting Logic
+StrictMode simulates mount → unmount → mount immediately:
+
+Useful to detect memory leaks
+
+Helps test resource initialization and teardown
+
+Use this pattern to avoid memory leaks:
+
+js
+Copy
+Edit
+useEffect(() => {
+  const id = setInterval(...);
+  return () => clearInterval(id); // cleanup
+}, []);
+⚙️ 7. Concurrent Rendering Preparation
+StrictMode prepares components for Concurrent Mode by:
+
+Emulating re-entrancy
+
+Warning for impure code or DOM mutations during render
+
+🔁 Doesn’t enable full concurrent rendering
+✅ Makes component compatible with future concurrent features
+
+🧠 8. Effect on React.memo and Memoization
+React.memo components may re-render unexpectedly under StrictMode
+
+Used to detect impure memoized components
+
+✅ Don’t remove memoization
+⚠️ Ensure pure rendering functions
+
+⚡ 9. useLayoutEffect vs useEffect Warnings
+StrictMode warns when:
+
+useLayoutEffect blocks painting
+
+It can be replaced with useEffect safely
+
+⏱️ useLayoutEffect runs synchronously before paint
+✅ Use only for synchronous DOM measurements
+❌ Avoid using it for side effects like API calls
+
+🧩 10. Can You Nest or Scope StrictMode?
+Yes ✅
+
+You can wrap only parts of the app:
+
+jsx
+Copy
+Edit
+<StrictMode>
+  <Header />
+</StrictMode>
+<Main /> // not in strict mode
+💡 Useful for gradual adoption in large legacy apps
+
+🛡️ 11. Is StrictMode Used in Production?
+No ❌
+It is stripped out during build (react-dom.production.min.js).
+
+StrictMode is strictly for development & debugging
+
+🔄 12. How to Add StrictMode in Legacy Codebases
+Steps:
+
+Wrap new components in <StrictMode>
+
+Fix console warnings
+
+Expand to more components gradually
+
+Replace third-party libraries if needed
+
+🧱 13. StrictMode Limitations
+Limitation	Description
+🛠 Dev Only	No effect in production
+❌ Not a Bug Catcher	Doesn't catch all runtime bugs
+🧪 Focuses Only on Lifecycle & Side Effects	Doesn’t verify logic, UI, or API issues
+
+⚠️ 14. StrictMode Common Warnings You Might See
+Warning: Unsafe lifecycle methods
+
+Warning: useEffect cleanup not handled
+
+Warning: DOM mutations outside effect
+
+Warning: useLayoutEffect blocks paint
+
+🔍 15. StrictMode Summary Table
+Feature	Enabled in Dev?	Enabled in Prod?	Notes
+Warns on unsafe lifecycles	✅	❌	console warning
+Double run of effects	✅	❌	for cleanup test
+Detects legacy patterns	✅	❌	warns on deprecated methods
+Simulates unmount/remount	✅	❌	test resource handling
+Helps prepare for Concurrent	✅	❌	useful before adopting concurrency
+
