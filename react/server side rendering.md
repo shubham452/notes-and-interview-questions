@@ -269,11 +269,4 @@ const NoSSRComponent = dynamic(() => import('./OnlyClient'), { ssr: false });
 
 ---
 
-```
 
-Let me know if you'd like:
-- A downloadable `.md` file
-- A printable PDF version
-- A visual **mind map**
-- Or an actual **Next.js starter SSR/SSG project setup**
-```
