@@ -300,10 +300,14 @@ const { user } = useOutletContext();
 | **React Router Built-in?** | ✅ Yes (`react-router-dom`)               | ❌ No direct `useQuery`, use `useLocation()` + `URLSearchParams` |
 | **Example URL**            | `/user/42`                               | `/user?page=2&sort=asc`                                         |
 
-✅ useParams() – For Path Parameters
-Example:
+## ✅ `useParams()` – For Path Parameters
 
+### Example:
+```jsx
 <Route path="/user/:id" element={<User />} />
+
+
+import { useParams } from 'react-router-dom';
 
 import { useParams } from 'react-router-dom';
 
@@ -311,6 +315,7 @@ function User() {
   const { id } = useParams(); // '42' if URL is /user/42
   return <p>User ID: {id}</p>;
 }
+
 ✅ useQuery (Custom Hook using useLocation) – For Query Strings
 Example:
 URL: /products?page=2&sort=price
@@ -324,12 +329,14 @@ function useQuery() {
 
 function ProductList() {
   const query = useQuery();
-  const page = query.get("page");      // '2'
-  const sort = query.get("sort");      // 'price'
+  const page = query.get("page");  // '2'
+  const sort = query.get("sort");  // 'price'
 
   return <p>Page: {page}, Sort by: {sort}</p>;
 }
-🧠 Quick Summary
-Scenario	Use
-/product/123	useParams()
-/product?id=123&filter=on	useLocation() + URLSearchParams (a.k.a. useQuery)
+
+| Scenario                    | Use                                              |
+| --------------------------- | ------------------------------------------------ |
+| `/product/123`              | `useParams()`                                    |
+| `/product?id=123&filter=on` | `useLocation()` + `URLSearchParams` (`useQuery`) |
+
