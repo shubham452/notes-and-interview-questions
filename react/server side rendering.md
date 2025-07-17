@@ -1,7 +1,3 @@
-Sure! Here's your fully formatted and cleaned-up Markdown (`.md`) version of the **Server-Side Rendering (SSR) & Static Site Generation (SSG)** topics:
-
----
-
 
 # 🌐 Server-Side Rendering (SSR) and Static Site Generation (SSG)
 
