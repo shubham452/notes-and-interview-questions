@@ -1,0 +1,279 @@
+
+
+# 🧠 **React State – Master Notes**
+
+*Covers: `useState`, updates, batching, stale closures, performance optimization, and more.*
+
+---
+
+## ✅ 1. **What is React State?**
+
+State in React is a **plain JavaScript object** used to represent information about the component’s current situation. When state changes, React re-renders the component.
+
+> In functional components, state is managed using the **`useState` hook**.
+
+```js
+const [count, setCount] = useState(0);
+```
+
+---
+
+## ✅ 2. **How `useState` Works**
+
+* `useState(initialValue)` returns an **array**:
+  `[currentState, setStateFunction]`
+
+### ⚡ Common Patterns:
+
+```js
+const [name, setName] = useState('Shubham');
+const [user, setUser] = useState({ name: '', age: 0 });
+```
+
+---
+
+## ✅ 3. **Updating State**
+
+State is **never updated directly**.
+
+🚫 `count = count + 1;`
+✅ `setCount(count + 1);`
+
+---
+
+## ✅ 4. **Functional Updates**
+
+Use **functional updates** when new state depends on previous value.
+
+```js
+setCount(prev => prev + 1);
+```
+
+🔁 Especially useful inside **loops**, **async callbacks**, or **debouncing**.
+
+---
+
+## ✅ 5. **Lazy Initialization**
+
+Useful when the initial state requires **expensive computation**.
+
+```js
+const [data, setData] = useState(() => computeHeavy());
+```
+
+✔️ The function runs **only on the first render**.
+
+---
+
+## ✅ 6. **State and Re-rendering**
+
+React re-renders the component when:
+
+* The **state or props** change
+* But only if the **new value is different (shallow check)**
+
+🔁 Same value? → No re-render.
+
+```js
+setCount(5); // If already 5 → No render
+```
+
+---
+
+## ✅ 7. **State Batching (React 18+)**
+
+React **batches multiple state updates** into a **single re-render**.
+
+```js
+setCount(1);
+setName('John');
+// Only one render will happen.
+```
+
+🧠 Even works inside `setTimeout`, promises, and async/await in React 18+.
+
+---
+
+## ✅ 8. **Immutability in State**
+
+React compares **object references** (not deep equality).
+
+So, always update non-primitive (object/array) state immutably.
+
+```js
+setUser(prev => ({ ...prev, name: 'Shubham' }));
+```
+
+🔴 Direct mutation (e.g. `user.name = "New"`) → React won’t detect.
+
+---
+
+## ✅ 9. **Avoiding Stale State (Closure Issue)**
+
+In async callbacks or handlers, you might read stale values.
+
+🔁 Solution: Use functional updates.
+
+```js
+setCount(prev => prev + 1);
+```
+
+---
+
+## ✅ 10. **Rules of Hooks – No Conditional `useState`**
+
+Hooks must be **called in the same order** on every render.
+
+🚫 Don’t do:
+
+```js
+if (condition) {
+  useState(...); // ❌
+}
+```
+
+✅ Instead:
+
+```js
+const [value, setValue] = useState(condition ? 'Yes' : 'No');
+```
+
+---
+
+## ✅ 11. **Resetting State**
+
+Reset by calling the setter with the **initial value**.
+
+```js
+setCount(0);
+```
+
+Each `useState` is **independent**, so reset individually.
+
+---
+
+## ✅ 12. **Sharing State Between Components**
+
+* **Local State** → stays within a component
+* To **share** state:
+
+  * **Lift it up** to a common ancestor
+  * Use **Context API**
+  * Use **Redux** or other global state libs
+
+---
+
+## ✅ 13. **Derived vs Independent State**
+
+**Derived State** = Calculated from props/state
+**Independent State** = Manages its own value
+
+🛑 Avoid storing derived state in `useState`
+
+✅ Instead compute during render:
+
+```js
+const fullName = `${firstName} ${lastName}`;
+```
+
+---
+
+## ✅ 14. **useEffect and State**
+
+### Common issues:
+
+* Infinite loops when setting state inside `useEffect` without proper dependencies
+* Cleanup is needed to avoid memory leaks with timers
+
+```js
+useEffect(() => {
+  const timer = setTimeout(() => {
+    setValue(input);
+  }, 300);
+
+  return () => clearTimeout(timer);
+}, [input]);
+```
+
+---
+
+## ✅ 15. **Tracking Previous State**
+
+Use `useRef` to store previous values.
+
+```js
+const prevCount = useRef();
+useEffect(() => {
+  prevCount.current = count;
+}, [count]);
+```
+
+🟡 `useRef` does **not cause re-renders**.
+
+---
+
+## ✅ 16. **Force a Re-render**
+
+React only re-renders if state changes.
+
+To force a re-render:
+
+```js
+const [, forceUpdate] = useState(0);
+forceUpdate(n => n + 1);
+```
+
+---
+
+## ✅ 17. **Throttle or Debounce State Updates**
+
+Throttle: regulate state update frequency
+Debounce: wait until user stops typing
+
+```js
+useEffect(() => {
+  const id = setTimeout(() => {
+    setQuery(input);
+  }, 300);
+  return () => clearTimeout(id);
+}, [input]);
+```
+
+---
+
+## ✅ 18. **React 18: `startTransition()`**
+
+Mark **non-urgent state updates** to avoid UI jank.
+
+```js
+startTransition(() => {
+  setSearchResults(data);
+});
+```
+
+---
+
+## ✅ 19. **Common Anti-patterns to Avoid**
+
+| ❌ Bad Pattern                        | ✅ Correct Approach                    |
+| ------------------------------------ | ------------------------------------- |
+| Copying props to state unnecessarily | Derive values in render or useEffect  |
+| Mutating state directly              | Use immutable updates (spread, immer) |
+| Using useState inside conditionals   | Call useState at top level always     |
+| setState in render                   | Move to useEffect or handlers         |
+
+---
+
+## 🧠 Extra: React Re-render Triggers Summary
+
+| Trigger                   | Causes Re-render? |
+| ------------------------- | ----------------- |
+| setState with new value   | ✅                 |
+| setState with same value  | ❌                 |
+| Direct mutation of object | ❌                 |
+| Functional update         | ✅                 |
+| Ref value change          | ❌                 |
+
+---
+
+Would you like these **converted into a 2-page PDF cheat sheet** or added to your full React interview notes?
