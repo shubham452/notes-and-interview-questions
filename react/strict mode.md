@@ -2,7 +2,7 @@ Here’s your **📘 Master Markdown Notes** on `React.StrictMode`, structured a
 
 ---
 
-````md
+
 # ✅ React.StrictMode – Master Notes
 
 > Covers: Lifecycle checks, side-effects, concurrent prep, effect cleanup testing, and best practices.
