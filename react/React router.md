@@ -1,3 +1,79 @@
+1. Router Setup
+BrowserRouter vs HashRouter
+
+Wrapping your app with <BrowserRouter>
+
+Static vs dynamic routes
+
+2. Routes & Route
+<Routes> and <Route> usage (v6+)
+
+Nested <Route> configuration
+
+Route path matching (exact match no longer needed in v6)
+
+Using index routes for default child components
+
+3. Navigation Components
+<Link> vs <NavLink> (with styling)
+
+<Navigate /> for programmatic redirection
+
+<Outlet /> for nested routing rendering
+
+4. Route Parameters
+useParams() hook
+
+Dynamic segments like /user/:id
+
+Optional parameters and splat routes (*)
+
+5. Programmatic Navigation
+useNavigate() hook to navigate manually (replace vs push)
+
+Passing state via navigation
+
+6. Hooks
+useLocation() (access current URL info)
+
+useParams() (access route parameters)
+
+useNavigate() (programmatic routing)
+
+7. Nested Routes
+Route nesting via parent <Route> and <Outlet />
+
+Handling nested layouts and child components
+
+Using layout routes for common wrappers (e.g., sidebar)
+
+8. Conditional Rendering / Access Control
+Redirecting unauthenticated users
+
+PrivateRoute / Protected Route pattern (custom wrapper)
+
+Role-based routing guards
+
+9. 404 Not Found Handling
+Wildcard * route
+
+Fallback route with custom 404 page
+
+10. Code Splitting with Lazy Routes
+React.lazy and Suspense with routes
+
+Loading components lazily to optimize performance
+
+11. Query Parameters (optional)
+Using useLocation() + URLSearchParams to read query strings
+
+Handling filters/sorting/search via query params
+
+12. Outlet Context (Advanced)
+Passing data to nested routes using <Outlet context={...} />
+
+Reading with useOutletContext()
+
 **🚦 React Router**
 
 **1. What is React Router?**
@@ -18,276 +94,242 @@ URL state in sync with the UI.
 | History API    | Uses HTML5 History API           | Uses hash portion of the URL       |
 
 
-**3. How do you handle route parameters in React Router?**
+**🧭 React Router Notes (v6+) with Examples**
 
-jsx
+---
 
-&lt;Route path="/user/:id" element={&lt;User /&gt;} /&gt;
+## 1. **Router Setup**
 
-You can access the parameter using the useParams hook:
+### `BrowserRouter` vs `HashRouter`
 
-jsx
+* `BrowserRouter`: Uses HTML5 history API (clean URLs like `/home`).
+* `HashRouter`: Uses hash in URL (`/#/home`). Useful when deploying on static hosts without backend support.
+
+**Example:**
+
+```jsx
+import { BrowserRouter } from 'react-router-dom';
+
+<BrowserRouter>
+  <App />
+</BrowserRouter>
+```
+
+---
+
+## 2. **Routes & Route**
+
+* Wrap all routes inside `<Routes>`.
+* Use `<Route path="..." element={<Component />} />`.
+
+**Example:**
+
+```jsx
+<Routes>
+  <Route path="/" element={<Home />} />
+  <Route path="/about" element={<About />} />
+</Routes>
+```
+
+---
+
+## 3. **Navigation Components**
+
+### `Link` vs `NavLink`
+
+* `Link`: Basic navigation.
+* `NavLink`: Adds `active` styling when route matches.
+
+**Example:**
+
+```jsx
+<Link to="/about">About</Link>
+<NavLink to="/home" className={({ isActive }) => isActive ? 'active' : ''}>Home</NavLink>
+```
+
+---
+
+## 4. **Route Parameters**
+
+Use `:id` in the path and `useParams()` to read it.
+
+**Example:**
+
+```jsx
+<Route path="/user/:id" element={<UserProfile />} />
+```
+
+```jsx
+function UserProfile() {
+  const { id } = useParams();
+  return <div>User ID: {id}</div>;
+}
+```
+
+---
+
+## 5. **Programmatic Navigation**
+
+Use `useNavigate()` to redirect manually.
+
+**Example:**
+
+```jsx
+const navigate = useNavigate();
+navigate('/dashboard');
+navigate('/login', { replace: true });
+```
+
+---
+
+## 6. **React Router Hooks**
+
+* `useParams()` – Get URL params.
+* `useLocation()` – Get current URL info.
+* `useNavigate()` – Navigate programmatically.
+
+---
+
+## 7. **Nested Routes & Layouts**
+
+Use `<Outlet />` in layout components to render nested children.
+
+**Example:**
+
+```jsx
+<Route path="/dashboard" element={<DashboardLayout />}>
+  <Route index element={<DashboardHome />} />
+  <Route path="settings" element={<Settings />} />
+</Route>
+```
+
+```jsx
+function DashboardLayout() {
+  return (
+    <>
+      <Sidebar />
+      <Outlet />
+    </>
+  );
+}
+```
+
+---
+
+## 8. **Protected Routes (Auth)**
+
+Wrap protected routes in a component that checks auth.
+
+**Example:**
+
+```jsx
+function PrivateRoute({ children }) {
+  const isLoggedIn = !!localStorage.getItem('token');
+  return isLoggedIn ? children : <Navigate to="/login" />;
+}
+
+<Route path="/admin" element={<PrivateRoute><Admin /></PrivateRoute>} />
+```
+
+---
+
+## 9. **404 - Page Not Found**
+
+Catch all unmatched routes using `*`.
+
+**Example:**
+
+```jsx
+<Route path="*" element={<NotFound />} />
+```
+
+---
+
+## 10. **Lazy Loading Routes**
+
+Use `React.lazy` + `Suspense` to load routes only when needed.
+
+**Example:**
+
+```jsx
+const About = React.lazy(() => import('./About'));
+
+<Route path="/about" element={
+  <Suspense fallback={<div>Loading...</div>}>
+    <About />
+  </Suspense>
+} />
+```
+
+---
+
+## 11. **Query Parameters**
+
+Use `useLocation()` with `URLSearchParams`.
+
+**Example:**
+
+```jsx
+const { search } = useLocation();
+const query = new URLSearchParams(search);
+const name = query.get('name');
+```
+
+---
+
+## 12. **Outlet Context**
+
+Use `<Outlet context={value}>` to pass data to nested routes.
+
+**Example:**
+
+```jsx
+<Outlet context={{ user }} />
+```
+
+```jsx
+const { user } = useOutletContext();
+```
+
+---
+
+| Feature                    | `useParams()`                            | `useQuery` (via `useLocation`)                                  |
+| -------------------------- | ---------------------------------------- | --------------------------------------------------------------- |
+| **Purpose**                | Get route/path parameters (URL segments) | Get **query parameters** (key=value in URL)                     |
+| **Source of Data**         | Comes from the path itself (`/user/:id`) | Comes from the query string (`?page=2&sort=asc`)                |
+| **React Router Built-in?** | ✅ Yes (`react-router-dom`)               | ❌ No direct `useQuery`, use `useLocation()` + `URLSearchParams` |
+| **Example URL**            | `/user/42`                               | `/user?page=2&sort=asc`                                         |
+
+✅ useParams() – For Path Parameters
+Example:
+
+<Route path="/user/:id" element={<User />} />
 
 import { useParams } from 'react-router-dom';
 
-const User = () =&gt; {
-
-const { id } = useParams();
-
-return &lt;div&gt;User ID: {id}&lt;/div&gt;;
-
-};
-
-**4. What is lazy loading in React Router?**
-
-Lazy loading delays the loading of components until they are needed,
-improving performance.
-
-jsx
-
-import { lazy, Suspense } from 'react';
-
-const Home = lazy(() =&gt; import('./Home'));
-
-&lt;Suspense fallback={&lt;div&gt;Loading...&lt;/div&gt;}&gt;
-
-&lt;Route path="/" element={&lt;Home /&gt;} /&gt;
-
-&lt;/Suspense&gt;
-
-**5. How do you create a private route in React Router?**
-
-Private routes restrict access based on authentication.
-
-jsx
-
-const PrivateRoute = ({ children }) =&gt; {
-
-const isAuthenticated = /\* your auth logic \*/;
-
-return isAuthenticated ? children : &lt;Navigate to="/login" /&gt;;
-
-};
-
-// Usage
-
-&lt;Route path="/dashboard" element={&lt;PrivateRoute&gt;&lt;Dashboard
-/&gt;&lt;/PrivateRoute&gt;} /&gt;
-
-**6. What is the difference between useNavigate and useHistory?**
-
- | **Hook**       | **React Router Version** | **Description**                            |
-|----------------|---------------------------|--------------------------------------------|
-| `useHistory`   | v5                        | Used to access navigation history          |
-| `useNavigate`  | v6+                       | Replaces `useHistory`, more declarative    |
-
-
+function User() {
+  const { id } = useParams(); // '42' if URL is /user/42
+  return <p>User ID: {id}</p>;
+}
+✅ useQuery (Custom Hook using useLocation) – For Query Strings
 Example:
+URL: /products?page=2&sort=price
 
 
-const navigate = useNavigate();
+import { useLocation } from 'react-router-dom';
 
-navigate('/home');
-
-🌐 1. react-router-dom Basics
-----------------------------
-
-### ✅ Core Components
-
-| **Component**    | **Purpose**                                                             |
-|------------------|--------------------------------------------------------------------------|
-| `BrowserRouter`  | Wraps the app to enable routing using the HTML5 history API             |
-| `Routes`         | Replaces `Switch` (v6+). Holds all the route definitions                |
-| `Route`          | Defines a single route path and the element to render                   |
-
-
-### 🔰 Example:
-
-jsx
-
-import { BrowserRouter, Routes, Route } from 'react-router-dom';
-
-import Home from './Home';
-
-import About from './About';
-
-function App() {
-
-return (
-
-&lt;BrowserRouter&gt;
-
-&lt;Routes&gt;
-
-&lt;Route path="/" element={&lt;Home /&gt;} /&gt;
-
-&lt;Route path="/about" element={&lt;About /&gt;} /&gt;
-
-&lt;/Routes&gt;
-
-&lt;/BrowserRouter&gt;
-
-);
-
+function useQuery() {
+  return new URLSearchParams(useLocation().search);
 }
 
-🧩 2. Nested Routes
-------------------
+function ProductList() {
+  const query = useQuery();
+  const page = query.get("page");      // '2'
+  const sort = query.get("sort");      // 'price'
 
--   Useful when a route should render sub-routes inside a parent layout.
-
--   Use &lt;Outlet /&gt; in the parent component to render child routes.
-
-### 📦 Example:
-
-jsx
-
-// In App.js
-
-&lt;Routes&gt;
-
-&lt;Route path="/dashboard" element={&lt;Dashboard /&gt;}&gt;
-
-&lt;Route path="profile" element={&lt;Profile /&gt;} /&gt;
-
-&lt;Route path="settings" element={&lt;Settings /&gt;} /&gt;
-
-&lt;/Route&gt;
-
-&lt;/Routes&gt;
-
-jsx
-
-// In Dashboard.js
-
-import { Outlet } from 'react-router-dom';
-
-const Dashboard = () =&gt; (
-
-&lt;div&gt;
-
-&lt;h1&gt;Dashboard&lt;/h1&gt;
-
-&lt;Outlet /&gt; {/\* Nested routes will render here \*/}
-
-&lt;/div&gt;
-
-);
-
-🚀 3. Navigation (useNavigate, Link)
------------------------------------
-
-### 🔗 Link
-
--   Used to render anchor-style navigation without reloading the page.
-
-jsx
-
-&lt;Link to="/about"&gt;About&lt;/Link&gt;
-
-### 📍 useNavigate
-
--   Programmatic navigation (like history.push() in older versions).
-
-jsx
-
-import { useNavigate } from 'react-router-dom';
-
-const Home = () =&gt; {
-
-const navigate = useNavigate();
-
-const goToProfile = () =&gt; navigate('/profile');
-
-return &lt;button onClick={goToProfile}&gt;Go to Profile&lt;/button&gt;;
-
-};
-**Link** is a React component from react-router-dom that's used to create navigation links in your JSX. It’s like an anchor tag (), but it prevents a full page reload and lets React Router handle the route change smoothly.
-
-
-You use this when you want users to click and go to another page.
-
-**useNavigate** is a hook also from react-router-dom. You use it inside a function (like after submitting a form) to programmatically navigate to another route.
-
-Example:
-
-useNavigate();  const handleSubmit = () => {    // after some logic    navigate('/dashboard');  };   `
-
-So basically:
-
-*   Use Link when you're navigating through the UI (clickable links).
-    
-*   Use useNavigate when you need to redirect in code after some action or logic.
-
-🔢 4. URL Params (useParams)
----------------------------
-
--   Useful for dynamic routes like /users/:id
-
-### 🧪 Example:
-
-jsx
-
-// Route definition
-
-&lt;Route path="/users/:id" element={&lt;User /&gt;} /&gt;
-
-// User.js
-
-import { useParams } from 'react-router-dom';
-
-const User = () =&gt; {
-
-const { id } = useParams();
-
-return &lt;div&gt;User ID: {id}&lt;/div&gt;;
-
-};
-
-🔁 5. Redirects and Route Protection
------------------------------------
-
-### 🔄 Redirect using useNavigate
-
-jsx
-
-const navigate = useNavigate();
-
-useEffect(() =&gt; {
-
-if (!userLoggedIn) {
-
-navigate('/login');
-
+  return <p>Page: {page}, Sort by: {sort}</p>;
 }
-
-}, \[\]);
-
-### 🔐 Route Protection (Private Routes)
-
-You can create a wrapper component to protect routes.
-
-#### 🔒 PrivateRoute Component
-
-jsx
-
-const PrivateRoute = ({ children }) =&gt; {
-
-const isAuthenticated = localStorage.getItem('token');
-
-return isAuthenticated ? children : &lt;Navigate to="/login" /&gt;;
-
-};
-
-#### ✅ Usage:
-
-jsx
-
-&lt;Routes&gt;
-
-&lt;Route path="/login" element={&lt;Login /&gt;} /&gt;
-
-&lt;Route path="/dashboard" element={&lt;PrivateRoute&gt;&lt;Dashboard
-/&gt;&lt;/PrivateRoute&gt;} /&gt;
-
-&lt;/Routes&gt;
+🧠 Quick Summary
+Scenario	Use
+/product/123	useParams()
+/product?id=123&filter=on	useLocation() + URLSearchParams (a.k.a. useQuery)
