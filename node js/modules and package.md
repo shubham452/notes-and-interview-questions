@@ -129,5 +129,3 @@ A: Create a separate JS file, export functions/objects using `module.exports`, a
 | npm Install/Remove        | `npm install lodash`, `npm uninstall lodash`   | Manages dependencies; `install`, `update`, `uninstall`                |
 | Your Own Modules          | `exports.foo = ...` + `const x = require(...)` | Split code into files; export/import for reuse                        |
 
-If you want more detailed code or deeper explanations on any topic, please let me know!
-
