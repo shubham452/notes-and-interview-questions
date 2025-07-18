@@ -1,86 +1,5 @@
 Here are the **important topics you need to know** under **React Concurrent Mode (Concurrent Features in React 18+)**, structured to match your existing notes:
 
----
-
-## ✅ Topics to Know in Concurrent Mode (React 18+)
-
-### 1. **What is Concurrent Mode?**
-
-* Understand the shift from blocking to interruptible rendering.
-* How React can pause/resume/abandon rendering tasks.
-
----
-
-### 2. **How to Enable Concurrent Features**
-
-* Replacing `ReactDOM.render()` with `createRoot()` (React 18).
-* No explicit opt-in; features become available automatically.
-
----
-
-### 3. **Core APIs & Hooks**
-
-#### a. `startTransition()`
-
-* Defers non-urgent state updates.
-* Prevents blocking UI during heavy calculations or re-renders.
-
-#### b. `useTransition()`
-
-* Gives control over transition state (`isPending`).
-* Enables showing loading spinners or disabling buttons while UI updates.
-
-#### c. `useDeferredValue()`
-
-* Defer updates to derived or expensive state (like filtering a large list).
-* Keeps fast interactions responsive.
-
-#### d. `Suspense`
-
-* Shows fallback UI while:
-
-  * Lazy-loading components (`React.lazy`)
-  * Waiting for data (with future integrations like React Query/SWR, or Server Components)
-
----
-
-### 4. **Automatic Batching**
-
-* React batches multiple state updates even across `setTimeout`, `Promise`, or native event handlers.
-
----
-
-### 5. **Interruptible Rendering**
-
-* React can pause rendering a large tree if higher priority work comes in.
-* Useful in slow devices, complex UIs, or transitions.
-
----
-
-### 6. **Selective Hydration (for SSR)**
-
-* React prioritizes visible content first during hydration (for server-rendered pages).
-* Helps performance of large SSR pages.
-
----
-
-### 7. **Concurrent Rendering vs Concurrent Execution**
-
-* Rendering is **concurrent** (interruptible), but JavaScript is still **single-threaded**.
-* React just manages work smarter—no real threading involved.
-
----
-
-**🧭 React Router Notes (v6+) with Examples**
-
----
-
-## ✅ React + API Integration: Full Notes with Examples
-
-... \[API notes unchanged for brevity] ...
-
----
-
 ## ✅ React Concurrent Mode (a.k.a. Concurrent Features in React 18+)
 
 ### 🔍 What is Concurrent Mode?
@@ -263,4 +182,86 @@ function App() {
 * Does not break existing apps—fully backward compatible.
 
 ---
+
+---
+
+## ✅ Topics to Know in Concurrent Mode (React 18+)
+
+### 1. **What is Concurrent Mode?**
+
+* Understand the shift from blocking to interruptible rendering.
+* How React can pause/resume/abandon rendering tasks.
+
+---
+
+### 2. **How to Enable Concurrent Features**
+
+* Replacing `ReactDOM.render()` with `createRoot()` (React 18).
+* No explicit opt-in; features become available automatically.
+
+---
+
+### 3. **Core APIs & Hooks**
+
+#### a. `startTransition()`
+
+* Defers non-urgent state updates.
+* Prevents blocking UI during heavy calculations or re-renders.
+
+#### b. `useTransition()`
+
+* Gives control over transition state (`isPending`).
+* Enables showing loading spinners or disabling buttons while UI updates.
+
+#### c. `useDeferredValue()`
+
+* Defer updates to derived or expensive state (like filtering a large list).
+* Keeps fast interactions responsive.
+
+#### d. `Suspense`
+
+* Shows fallback UI while:
+
+  * Lazy-loading components (`React.lazy`)
+  * Waiting for data (with future integrations like React Query/SWR, or Server Components)
+
+---
+
+### 4. **Automatic Batching**
+
+* React batches multiple state updates even across `setTimeout`, `Promise`, or native event handlers.
+
+---
+
+### 5. **Interruptible Rendering**
+
+* React can pause rendering a large tree if higher priority work comes in.
+* Useful in slow devices, complex UIs, or transitions.
+
+---
+
+### 6. **Selective Hydration (for SSR)**
+
+* React prioritizes visible content first during hydration (for server-rendered pages).
+* Helps performance of large SSR pages.
+
+---
+
+### 7. **Concurrent Rendering vs Concurrent Execution**
+
+* Rendering is **concurrent** (interruptible), but JavaScript is still **single-threaded**.
+* React just manages work smarter—no real threading involved.
+
+---
+
+**🧭 React Router Notes (v6+) with Examples**
+
+---
+
+## ✅ React + API Integration: Full Notes with Examples
+
+... \[API notes unchanged for brevity] ...
+
+---
+
 
