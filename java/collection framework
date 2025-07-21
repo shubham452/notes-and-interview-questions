@@ -1,0 +1,2180 @@
+This comprehensive explanation of the Java Collections Framework and Streams API is based on the provided video transcript.
+1. Introduction to Java Collections Framework
+The Java Collections Framework is a crucial part of Java development, frequently asked about in interviews.
+•	What is a Collection? A collection is simply a group of elements. For example, a collection of coins or bottle caps. In Java, these elements can be strings, numbers, objects, or any other data type.
+•	What is the Collection Framework? It is a set of classes and interfaces that help to manage collections of objects efficiently.
+•	Drawbacks of Old Classes (Before Java 1.2/2): Before Java version 2 (or 1.2), Java relied on classes like Vector, Stack, Hashtable, and raw Arrays to manipulate groups of objects. However, these classes had several drawbacks: 
+o	Inconsistency: Each class had its own style of managing data, leading to confusion and difficulty in remembering how to use them.
+o	Lack of Common Interface: They did not work together well, and there was no common interface, which made it hard to write generic methods.
+•	Benefits of Collection Framework: Introduced in Java version 2 (or 1.2), the Collection Framework solved these problems by providing: 
+o	Interoperability: Classes and interfaces can now be used interchangeably.
+o	Common Interfaces: The presence of common interfaces allows for writing generic methods and defining generic variables.
+2. Key Interfaces in Collection Framework
+The Collection Framework includes several key interfaces, which form its hierarchy:
+•	Iterable: This is the root interface of the entire Collection hierarchy. Any class that implements Iterable can be used with a for-each loop. It is part of the java.lang package.
+•	Collection: This is the root interface for all other collection interfaces (like List, Set, Queue, Deque). It provides a blueprint for basic operations like size(), isEmpty(), contains(), add(), and remove(). Collection extends Iterable.
+•	List: Represents an ordered collection that allows duplicate elements. Elements are stored and accessed by their index, similar to arrays. List extends Collection.
+•	Set: Represents a collection that does not allow duplicate elements. It does not maintain any specific order of elements. Set extends Collection.
+•	Queue: Represents a collection designed for holding elements prior to processing, following the FIFO (First-In, First-Out) principle. Elements are added at one end and removed from the other. Queue extends Collection.
+•	Deque (Double Ended Queue): Pronounced "Deck," it allows insertion and deletion of elements from both ends. Deque extends Queue.
+•	Map: This is a separate interface in the Collection Framework and does not extend the Collection interface. It stores data as key-value pairs, where each key is unique and maps to a single value.
+3. List Interface and Its Implementations
+The List interface represents an ordered collection that allows duplicate elements and index-based access.
+3.1. ArrayList
+•	When to Use: ArrayList is used when you need an ordered sequence of elements, allow duplicates, and require index-based access. Unlike fixed-size arrays, ArrayList dynamically increases or decreases its size as elements are added or removed.
+•	Internal Working:
+o	Internally, an ArrayList is backed by a dynamic array of Object.
+o	When an ArrayList is created, its initial capacity is 10 by default.
+o	Capacity vs. Size: Capacity refers to the current size of the internal array (how many elements it can hold), while size refers to the number of elements actually present in the ArrayList.
+o	Resizing: When the internal array becomes full during an add operation, ArrayList creates a new, larger array (typically 1.5 times the current capacity), copies all existing elements from the old array to the new one, and then adds the new element.
+o	Adding Elements: 
+1.	Check if there's enough space.
+2.	If full, resize the internal array.
+3.	Add the new element.
+o	Removing Elements: 
+1.	Validate the index.
+2.	Remove the element.
+3.	Shift all elements to the right of the removed element one position to the left to fill the gap.
+4.	The ArrayList does not automatically shrink its capacity when elements are removed, but you can explicitly trimToSize() to save memory.
+•	Time Complexity:
+o	get(index): O(1) (constant time) because elements are stored in contiguous memory and can be accessed directly by index.
+o	add(element) / add(index, element): O(n) (linear time) in the worst case, as it might require resizing and copying all elements, or shifting elements for insertion in the middle.
+o	remove(index) / remove(object): O(n) (linear time) in the worst case, as it involves shifting elements after removal.
+o	Looping: O(n), as it iterates over each element once.
+•	Coding Examples:
+•	import java.util.ArrayList;
+•	import java.util.Arrays;
+•	import java.util.Collections;
+•	import java.util.List;
+•	
+•	public class ArrayListDemo {
+•	    public static void main(String[] args) {
+•	        // Creation
+•	        ArrayList<Integer> arrayList = new ArrayList<>(); // Raw use warning
+•	        // Preferred way (Java 7+ diamond operator)
+•	        List<Integer> list = new ArrayList<>(); // Parent interface as reference
+•	
+•	        // Add elements
+•	        list.add(1);
+•	        list.add(5);
+•	        list.add(80);
+•	        System.out.println("List after adds: " + list); // Output:
+•	
+•	        // Get elements
+•	        System.out.println("Element at index 0: " + list.get(0)); // Output: 1
+•	        System.out.println("Element at index 2: " + list.get(2)); // Output: 80
+•	        // System.out.println(list.get(3)); // Throws IndexOutOfBoundsException
+•	
+•	        // Size
+•	        System.out.println("List size: " + list.size()); // Output: 3
+•	
+•	        // Iterating (for loop)
+•	        System.out.println("Iterating with for loop:");
+•	        for (int i = 0; i < list.size(); i++) {
+•	            System.out.println(list.get(i)); // Output: 1, 5, 80
+•	        }
+•	
+•	        // Iterating (for-each loop)
+•	        System.out.println("Iterating with for-each loop:");
+•	        for (int x : list) {
+•	            System.out.println(x); // Output: 1, 5, 80
+•	        }
+•	
+•	        // contains
+•	        System.out.println("List contains 50? " + list.contains(50)); // Output: false
+•	        System.out.println("List contains 5? " + list.contains(5));   // Output: true
+•	
+•	        // remove (by index)
+•	        List<Integer> remList = new ArrayList<>(Arrays.asList(1, 5, 80));
+•	        remList.remove(2); // Removes element at index 2 (80)
+•	        System.out.println("List after removing element at index 2: " + remList); // Output:
+•	
+•	        // add (at specific index)
+•	        List<Integer> addIndexList = new ArrayList<>(Arrays.asList(1, 5, 80));
+•	        addIndexList.add(1, 50); // Inserts 50 at index 1, shifts 5 and 80
+•	        System.out.println("List after adding 50 at index 1: " + addIndexList); // Output:
+•	
+•	        // set (replace element)
+•	        List<Integer> setList = new ArrayList<>(Arrays.asList(1, 5, 80));
+•	        setList.set(2, 50); // Replaces element at index 2 (80) with 50
+•	        System.out.println("List after setting index 2 to 50: " + setList); // Output:
+•	
+•	        // trimToSize
+•	        List<Integer> capacityList = new ArrayList<>(Arrays.asList(1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12));
+•	        // Initially capacity is often 1.5 * current size or 16+ on initial add after 10, etc.
+•	        // Using reflection to show internal capacity (Not recommended in production code)
+•	        try {
+•	            java.lang.reflect.Field elementData = ArrayList.class.getDeclaredField("elementData");
+•	            elementData.setAccessible(true);
+•	            Object[] internalArray = (Object[]) elementData.get(capacityList);
+•	            System.out.println("Initial capacity (before trim): " + internalArray.length);
+•	            capacityList.remove(0); // Removes element
+•	            capacityList.trimToSize(); // Shrinks capacity to current size
+•	            System.out.println("Capacity after trimToSize: " + ((Object[]) elementData.get(capacityList)).length);
+•	        } catch (Exception e) {
+•	            e.printStackTrace();
+•	        }
+•	
+•	        // Different Creation Methods
+•	        // 1. Using Arrays.asList() - returns a fixed-size list (java.util.Arrays$ArrayList)
+•	        List<String> fixedSizeList = Arrays.asList("Monday", "Tuesday");
+•	        System.out.println("Class of fixedSizeList: " + fixedSizeList.getClass().getName()); // Output: java.util.Arrays$ArrayList
+•	        // fixedSizeList.add("Wednesday"); // Throws UnsupportedOperationException
+•	        fixedSizeList.set(1, "Wednesday"); // Replace is allowed
+•	        System.out.println("Fixed size list after set: " + fixedSizeList); // Output: [Monday, Wednesday]
+•	
+•	        // 2. Using List.of() (Java 9+) - returns an unmodifiable list
+•	        List<Integer> unmodifiableList = List.of(1, 2, 3);
+•	        // unmodifiableList.set(1, 33); // Throws UnsupportedOperationException
+•	        // unmodifiableList.add(4); // Throws UnsupportedOperationException
+•	
+•	        // 3. Converting a fixed-size or unmodifiable list to a modifiable ArrayList
+•	        List<String> listFromFixed = new ArrayList<>(fixedSizeList);
+•	        listFromFixed.add("Mango"); // Modifiable
+•	        System.out.println("List from fixed size list: " + listFromFixed); // Output: [Monday, Wednesday, Mango]
+•	
+•	        // addAll
+•	        List<Integer> mainList = new ArrayList<>(Arrays.asList(0, 1, 2, 3));
+•	        List<Integer> otherList = List.of(4, 5, 6, 7, 8, 9); // Unmodifiable list
+•	        mainList.addAll(otherList); // Adds all elements from otherList to mainList
+•	        System.out.println("Main list after addAll: " + mainList); // Output:
+•	
+•	        // remove (by object vs by index)
+•	        List<Integer> numbersForRemove = new ArrayList<>(Arrays.asList(1, 2, 1, 3));
+•	        numbersForRemove.remove(Integer.valueOf(1)); // Removes the first occurrence of object 1
+•	        System.out.println("List after removing Integer.valueOf(1): " + numbersForRemove); // Output:
+•	        numbersForRemove.remove(1); // Removes element at index 1 (which is 1)
+•	        System.out.println("List after removing element at index 1: " + numbersForRemove); // Output:
+•	
+•	        // Converting to Array
+•	        List<Integer> listToArray = new ArrayList<>(Arrays.asList(1, 2, 3));
+•	        Object[] objArray = listToArray.toArray(); // Returns Object array
+•	        Integer[] intArray = listToArray.toArray(new Integer); // Returns typed array
+•	        System.out.println("Converted to Integer Array: " + Arrays.toString(intArray)); // Output:
+•	
+•	        // Sorting
+•	        List<Integer> unsortedList = new ArrayList<>(Arrays.asList(2, 1, 3));
+•	        Collections.sort(unsortedList); // Sorts in natural (ascending) order
+•	        System.out.println("Sorted list (Collections.sort): " + unsortedList); // Output:
+•	        unsortedList = new ArrayList<>(Arrays.asList(2, 1, 3));
+•	        unsortedList.sort(null); // Sorts in natural order (List.sort with null comparator)
+•	        System.out.println("Sorted list (List.sort null): " + unsortedList); // Output:
+•	    }
+•	}
+3.2. LinkedList
+•	Concept of Node: In a LinkedList, each element is stored in a separate object called a Node. A Node typically has two parts:
+o	Data: The actual value being stored.
+o	Pointer/Reference: A reference to the next node in the sequence.
+•	Types of Linked Lists:
+o	Singly Linked List: Each node points only to the next node.
+o	Doubly Linked List: Each node has two pointers: one to the next node and one to the previous node.
+o	Circular Linked List: The last node points back to the first node, forming a cycle.
+•	Java's LinkedList Implementation: The java.util.LinkedList class in Java is implemented as a doubly linked list. This allows efficient traversal in both forward and backward directions.
+•	Key Features:
+o	Non-Contiguous Memory: Unlike ArrayList, LinkedList elements are not stored in contiguous memory locations.
+o	Efficient Insertions and Deletions: Inserting or deleting elements in the middle of a LinkedList is more efficient (O(1) in specific cases, O(n) in worst case for searching) because it only requires changing pointers, without shifting elements.
+o	Slower Random Access: Accessing an element by index (get(index)) is slower (O(n)) because it requires traversing the list from the beginning (or end if closer) until the desired index is reached.
+o	Memory Overhead: LinkedList generally requires more memory than ArrayList because each node stores not only the data but also one or two pointers.
+•	Time Complexity:
+o	addFirst(), addLast(), removeFirst(), removeLast(): O(1) (constant time).
+o	get(index) / remove(index): O(n) (linear time) due to traversal.
+o	add(index, element) / remove(object): O(n) in worst case due to traversal to find the position.
+•	Coding Examples:
+•	import java.util.LinkedList;
+•	import java.util.List;
+•	import java.util.Arrays;
+•	
+•	public class LinkedListDemo {
+•	    public static void main(String[] args) {
+•	        // Creating a custom Node class for understanding
+•	        class Node {
+•	            public int value;
+•	            public Node next;
+•	
+•	            public Node(int value) {
+•	                this.value = value;
+•	                this.next = null;
+•	            }
+•	        }
+•	        // Manual LinkedList creation (for conceptual understanding)
+•	        Node node1 = new Node(1);
+•	        Node node2 = new Node(2);
+•	        node1.next = node2; // Node1 points to Node2
+•	        System.out.println("Manual Node: Value=" + node1.value + ", Next value=" + (node1.next != null ? node1.next.value : "null"));
+•	
+•	        // Java's LinkedList creation
+•	        LinkedList<Integer> linkedList = new LinkedList<>();
+•	        linkedList.add(1);
+•	        linkedList.add(2);
+•	        linkedList.add(3);
+•	        System.out.println("LinkedList after adds: " + linkedList); // Output:
+•	
+•	        // LinkedList acting as a Queue (FIFO)
+•	        System.out.println("\nLinkedList acting as Queue:");
+•	        LinkedList<Integer> q = new LinkedList<>();
+•	        q.addLast(1); // Enqueue: Add to the end
+•	        q.addLast(2);
+•	        q.addLast(3);
+•	        System.out.println("Queue (addLast): " + q); // Output:
+•	        System.out.println("Front element (peek): " + q.getFirst()); // Peek: Get front element
+•	        System.out.println("Deque (removeFirst): " + q.removeFirst()); // Dequeue: Remove from the front
+•	        System.out.println("Queue after removeFirst: " + q); // Output:
+•	
+•	        // LinkedList acting as a Stack (LIFO)
+•	        System.out.println("\nLinkedList acting as Stack:");
+•	        LinkedList<Integer> stack = new LinkedList<>();
+•	        stack.addFirst(3); // Push: Add to the top (front)
+•	        stack.addFirst(2);
+•	        stack.addFirst(1);
+•	        System.out.println("Stack (addFirst): " + stack); // Output:
+•	        System.out.println("Top element (peek): " + stack.getFirst()); // Peek: Get top element
+•	        System.out.println("Pop (removeFirst): " + stack.removeFirst()); // Pop: Remove from the top (front)
+•	        System.out.println("Stack after removeFirst: " + stack); // Output:
+•	
+•	        // Other LinkedList specific methods
+•	        linkedList.addFirst(0); // Add at the beginning
+•	        linkedList.addLast(4);  // Add at the end
+•	        System.out.println("LinkedList after addFirst/addLast: " + linkedList); // Output:
+•	
+•	        System.out.println("First element: " + linkedList.getFirst()); // Get first element
+•	        System.out.println("Last element: " + linkedList.getLast());   // Get last element
+•	
+•	        // removeIf (Java 8+)
+•	        linkedList.removeIf(x -> x % 2 == 0); // Remove even numbers
+•	        System.out.println("LinkedList after removeIf (even numbers removed): " + linkedList); // Output:
+•	
+•	        // removeAll
+•	        List<String> animals = new LinkedList<>(Arrays.asList("Cat", "Dog", "Elephant"));
+•	        List<String> animalsToRemove = Arrays.asList("Dog", "Lion");
+•	        animals.removeAll(animalsToRemove); // Removes common elements from animals
+•	        System.out.println("Animals after removeAll: " + animals); // Output: [Cat, Elephant]
+•	    }
+•	}
+3.3. Vector
+•	Legacy Class: Vector is a legacy class that existed before the Collection Framework (JDK 1.0). It was later retrofitted to implement the List interface.
+•	Key Features:
+o	Synchronized (Thread-Safe): The main distinguishing feature is that Vector's methods are synchronized, making it thread-safe. This means only one thread can access a Vector instance at a time, preventing data corruption in multi-threaded environments.
+o	Dynamic Array: Like ArrayList, Vector is backed by a dynamic array.
+o	Resizable: It can grow and shrink its size dynamically.
+o	Random Access: Supports fast index-based access.
+o	Initial Capacity and Growth: Default initial capacity is 10. By default, when a Vector needs to grow, its capacity doubles. You can also specify a capacityIncrement in the constructor to increase capacity by a fixed amount instead of doubling.
+•	When to Use: It is generally recommended to use ArrayList in single-threaded scenarios due to performance overhead. Use Vector primarily when thread safety is a concern and other modern concurrent alternatives are not suitable.
+•	Performance: Vector is generally slower than ArrayList due to the overhead of synchronization (locking and unlocking) even in single-threaded environments.
+•	Coding Examples:
+•	import java.util.ArrayList;
+•	import java.util.List;
+•	import java.util.Vector;
+•	
+•	public class VectorDemo {
+•	    public static void main(String[] args) throws InterruptedException {
+•	        // Creation
+•	        Vector<Integer> vector = new Vector<>(); // Default capacity 10
+•	        System.out.println("Default capacity: " + vector.capacity()); // Output: 10
+•	
+•	        Vector<Integer> vectorWithCapacity = new Vector<>(12); // Initial capacity 12
+•	        System.out.println("Capacity with initial capacity: " + vectorWithCapacity.capacity()); // Output: 12
+•	
+•	        // Creation with capacity increment
+•	        Vector<Integer> vectorWithIncrement = new Vector<>(5, 3); // Initial capacity 5, increment by 3
+•	        for (int i = 0; i < 5; i++) {
+•	            vectorWithIncrement.add(1);
+•	        }
+•	        System.out.println("Capacity after 5 adds (initial 5): " + vectorWithIncrement.capacity()); // Output: 5
+•	        vectorWithIncrement.add(1); // 6th add, capacity should increase
+•	        System.out.println("Capacity after 6th add (increment by 3): " + vectorWithIncrement.capacity()); // Output: 8 (5+3)
+•	
+•	        // Creation from a Collection
+•	        List<Integer> initialList = new ArrayList<>(List.of(1, 2, 3));
+•	        Vector<Integer> vectorFromCollection = new Vector<>(initialList);
+•	        System.out.println("Vector created from collection: " + vectorFromCollection); // Output:
+•	
+•	        // Basic methods (similar to ArrayList)
+•	        vectorFromCollection.add(4);
+•	        System.out.println("Vector after add: " + vectorFromCollection); // Output:
+•	        System.out.println("Element at index 0: " + vectorFromCollection.get(0)); // Output: 1
+•	        System.out.println("Size: " + vectorFromCollection.size()); // Output: 4
+•	
+•	        // Looping
+•	        System.out.println("Iterating Vector:");
+•	        for (int i = 0; i < vectorFromCollection.size(); i++) {
+•	            System.out.println(vectorFromCollection.get(i));
+•	        }
+•	
+•	        // contains
+•	        System.out.println("Vector contains 3? " + vectorFromCollection.contains(3)); // Output: true
+•	
+•	        // clear
+•	        vectorFromCollection.clear();
+•	        System.out.println("Vector after clear: " + vectorFromCollection); // Output: []
+•	
+•	        // Thread-safety demonstration
+•	        System.out.println("\n--- Thread Safety Demo ---");
+•	
+•	        // ArrayList (Not Thread-Safe)
+•	        List<Integer> arrayListThreadSafety = new ArrayList<>();
+•	        Runnable addToListTask = () -> {
+•	            for (int i = 0; i < 1000; i++) {
+•	                arrayListThreadSafety.add(i);
+•	            }
+•	        };
+•	        Thread t1_array = new Thread(addToListTask);
+•	        Thread t2_array = new Thread(addToListTask);
+•	        t1_array.start();
+•	        t2_array.start();
+•	        t1_array.join();
+•	        t2_array.join();
+•	        System.out.println("ArrayList size (expected 2000, actual might vary due to race condition): " + arrayListThreadSafety.size()); // Output: Varies (e.g., 1566, 1461)
+•	
+•	        // Vector (Thread-Safe)
+•	        Vector<Integer> vectorThreadSafety = new Vector<>();
+•	        Runnable addToVectorTask = () -> {
+•	            for (int i = 0; i < 1000; i++) {
+•	                vectorThreadSafety.add(i);
+•	            }
+•	        };
+•	        Thread t1_vector = new Thread(addToVectorTask);
+•	        Thread t2_vector = new Thread(addToVectorTask);
+•	        t1_vector.start();
+•	        t2_vector.start();
+•	        t1_vector.join();
+•	        t2_vector.join();
+•	        System.out.println("Vector size (expected 2000, actual should be 2000): " + vectorThreadSafety.size()); // Output: 2000
+•	    }
+•	}
+3.4. Stack
+•	LIFO Principle: Stack implements the LIFO (Last In, First Out) principle. The last element added to the stack is the first one to be removed. Think of a stack of cookies or books.
+•	Extends Vector: The java.util.Stack class extends Vector. This means it inherits all the methods and characteristics of Vector, including its synchronization (thread-safety).
+•	Key Features:
+o	LIFO Structure: Provides methods tailored for LIFO behavior.
+o	Thread-Safe: Due to extending Vector, Stack is thread-safe.
+o	Inherited Methods: It inherits non-stack-specific methods from Vector (like add(index), remove(index)) which can break the LIFO principle if used.
+•	Primary Operations:
+o	push(item): Adds an element to the top of the stack.
+o	pop(): Removes and returns the element at the top of the stack.
+o	peek(): Returns the element at the top of the stack without removing it.
+o	empty(): Checks if the stack is empty.
+o	search(object): Returns the 1-based position from the top of the stack where the object is found.
+•	Coding Examples:
+•	import java.util.ArrayList;
+•	import java.util.LinkedList;
+•	import java.util.Stack;
+•	import java.util.List;
+•	
+•	public class StackDemo {
+•	    public static void main(String[] args) {
+•	        // Stack using java.util.Stack
+•	        Stack<Integer> stack = new Stack<>();
+•	        stack.push(1); // Add to stack
+•	        stack.push(2);
+•	        stack.push(3);
+•	        stack.push(4);
+•	        stack.push(5);
+•	        System.out.println("Stack after pushes: " + stack); // Output:
+•	
+•	        System.out.println("Peek: " + stack.peek()); // Output: 5 (top element)
+•	        System.out.println("Popped element: " + stack.pop()); // Output: 5 (removes 5)
+•	        System.out.println("Stack after pop: " + stack); // Output:
+•	
+•	        System.out.println("Is stack empty? " + stack.empty()); // Output: false
+•	        System.out.println("Stack size: " + stack.size()); // Output: 4
+•	        System.out.println("Search for 3 (1-based from top): " + stack.search(3)); // Output: 2 (3 is 2nd from top: 4, 3)
+•	
+•	        // Demonstrating non-LIFO operations inherited from Vector
+•	        stack.add(0, 99); // Adds 99 at index 0, violates LIFO
+•	        System.out.println("Stack after add(0, 99): " + stack); // Output:
+•	
+•	        // Implementing Stack behavior using LinkedList
+•	        System.out.println("\nStack behavior using LinkedList:");
+•	        LinkedList<Integer> linkedListStack = new LinkedList<>();
+•	        linkedListStack.addFirst(1); // Push
+•	        linkedListStack.addFirst(2);
+•	        linkedListStack.addFirst(3);
+•	        System.out.println("LinkedList as Stack: " + linkedListStack); // Output:
+•	        System.out.println("Peek: " + linkedListStack.getFirst()); // Peek
+•	        System.out.println("Pop: " + linkedListStack.removeFirst()); // Pop
+•	        System.out.println("LinkedList as Stack after pop: " + linkedListStack); // Output:
+•	
+•	        // Implementing Stack behavior using ArrayList (less idiomatic/efficient)
+•	        System.out.println("\nStack behavior using ArrayList:");
+•	        ArrayList<Integer> arrayListStack = new ArrayList<>();
+•	        arrayListStack.add(1); // Push
+•	        arrayListStack.add(2);
+•	        arrayListStack.add(3);
+•	        System.out.println("ArrayList as Stack: " + arrayListStack); // Output:
+•	        System.out.println("Peek: " + arrayListStack.get(arrayListStack.size() - 1)); // Peek
+•	        System.out.println("Pop: " + arrayListStack.remove(arrayListStack.size() - 1)); // Pop
+•	        System.out.println("ArrayList as Stack after pop: " + arrayListStack); // Output:
+•	    }
+•	}
+4. Advanced List/Set Implementations (Concurrency)
+4.1. CopyOnWriteArrayList
+•	Problem Solved: Traditional lists like ArrayList and LinkedList are not thread-safe. Concurrent modifications (modifying while iterating) can lead to ConcurrentModificationException.
+•	Mechanism: CopyOnWriteArrayList is a thread-safe alternative. When a write operation (like add, remove, set) occurs, it creates a new copy of the underlying array, performs the modification on the new copy, and then replaces the old array with the new one.
+•	Benefits:
+o	Readers are Unaffected: Other threads that are currently reading the list are unaffected, as they continue to iterate over the original (old) array. This provides a "snapshot" consistency for iterators.
+o	No ConcurrentModificationException: It prevents this exception during concurrent read and write operations.
+•	When to Use: It is highly recommended for scenarios where:
+o	Reads are frequent, and writes are rare (read-intensive scenarios).
+o	You need stable iterations that don't reflect modifications made during the iteration.
+•	Performance: Due to the copying mechanism, write operations (add, remove) can be expensive for large lists.
+•	Coding Examples:
+•	import java.util.ArrayList;
+•	import java.util.Iterator;
+•	import java.util.List;
+•	import java.util.concurrent.CopyOnWriteArrayList;
+•	
+•	public class CopyOnWriteArrayListDemo {
+•	    public static void main(String[] args) throws InterruptedException {
+•	        // Scenario 1: Modifying while iterating in a single thread
+•	        System.out.println("--- Single Threaded Modification ---");
+•	
+•	        // ArrayList (throws ConcurrentModificationException)
+•	        List<String> shoppingList = new ArrayList<>(List.of("Milk", "Eggs", "Bread"));
+•	        System.out.println("Original Shopping List: " + shoppingList);
+•	        // This loop will throw ConcurrentModificationException
+•	        try {
+•	            for (String item : shoppingList) {
+•	                System.out.println("Reading item: " + item);
+•	                if ("Eggs".equals(item)) {
+•	                    shoppingList.add("Butter"); // Modifying while iterating
+•	                }
+•	            }
+•	        } catch (Exception e) {
+•	            System.out.println("Caught Exception with ArrayList: " + e.getClass().getSimpleName()); // Output: ConcurrentModificationException
+•	        }
+•	        System.out.println("Updated Shopping List (ArrayList, after exception): " + shoppingList + "\n");
+•	
+•	        // CopyOnWriteArrayList (does not throw exception, iterator sees snapshot)
+•	        List<String> copyOnWriteShoppingList = new CopyOnWriteArrayList<>(List.of("Milk", "Eggs", "Bread"));
+•	        System.out.println("Original CopyOnWrite Shopping List: " + copyOnWriteShoppingList);
+•	        for (String item : copyOnWriteShoppingList) {
+•	            System.out.println("Reading item: " + item);
+•	            if ("Eggs".equals(item)) {
+•	                copyOnWriteShoppingList.add("Butter"); // Modification happens on a new copy
+•	            }
+•	        }
+•	        System.out.println("Updated CopyOnWrite Shopping List (after loop): " + copyOnWriteShoppingList); // Output: [Milk, Eggs, Bread, Butter]
+•	        // Note: The loop itself still iterates over the original snapshot: Milk, Eggs, Bread.
+•	        // "Butter" is not printed during the loop because it was added to a new copy.
+•	
+•	        // Scenario 2: Concurrent Read and Write in Multi-threaded Environment
+•	        System.out.println("\n--- Multi-threaded Read/Write Demo ---");
+•	
+•	        // ArrayList (throws ConcurrentModificationException)
+•	        List<Integer> sharedList = new ArrayList<>();
+•	        // Populate list
+•	        for (int i = 0; i < 5; i++) {
+•	            sharedList.add(i);
+•	        }
+•	
+•	        Thread readerThread = new Thread(() -> {
+•	            try {
+•	                System.out.println("Reader started (ArrayList)");
+•	                for (Integer num : sharedList) {
+•	                    // Simulate some work
+•	                    Thread.sleep(100);
+•	                    System.out.println("Reader read (ArrayList): " + num);
+•	                }
+•	            } catch (Exception e) {
+•	                System.out.println("Reader caught exception (ArrayList): " + e.getClass().getSimpleName()); // Output: ConcurrentModificationException
+•	            }
+•	        });
+•	
+•	        Thread writerThread = new Thread(() -> {
+•	            try {
+•	                System.out.println("Writer started (ArrayList)");
+•	                // Simulate some work before modification
+•	                Thread.sleep(50);
+•	                sharedList.add(100); // Modifying during iteration
+•	                System.out.println("Writer added 100 (ArrayList)");
+•	            } catch (InterruptedException e) {
+•	                Thread.currentThread().interrupt();
+•	            }
+•	        });
+•	
+•	        readerThread.start();
+•	        writerThread.start();
+•	        readerThread.join();
+•	        writerThread.join();
+•	        System.out.println("Final ArrayList: " + sharedList + "\n");
+•	
+•	        // CopyOnWriteArrayList (no exception)
+•	        List<Integer> copyOnWriteSharedList = new CopyOnWriteArrayList<>();
+•	        // Populate list
+•	        for (int i = 0; i < 5; i++) {
+•	            copyOnWriteSharedList.add(i);
+•	        }
+•	
+•	        Thread copyOnWriteReaderThread = new Thread(() -> {
+•	            try {
+•	                System.out.println("Reader started (CopyOnWriteArrayList)");
+•	                for (Integer num : copyOnWriteSharedList) {
+•	                    Thread.sleep(100);
+•	                    System.out.println("Reader read (CopyOnWriteArrayList): " + num);
+•	                }
+•	            } catch (InterruptedException e) {
+•	                Thread.currentThread().interrupt();
+•	            }
+•	        });
+•	
+•	        Thread copyOnWriteWriterThread = new Thread(() -> {
+•	            try {
+•	                System.out.println("Writer started (CopyOnWriteArrayList)");
+•	                Thread.sleep(50);
+•	                copyOnWriteSharedList.add(100); // Modification happens on a new copy
+•	                System.out.println("Writer added 100 (CopyOnWriteArrayList)");
+•	            } catch (InterruptedException e) {
+•	                Thread.currentThread().interrupt();
+•	            }
+•	        });
+•	
+•	        copyOnWriteReaderThread.start();
+•	        copyOnWriteWriterThread.start();
+•	        copyOnWriteReaderThread.join();
+•	        copyOnWriteWriterThread.join();
+•	        System.out.println("Final CopyOnWriteArrayList: " + copyOnWriteSharedList); // Output:
+•	    }
+•	}
+5. Map Interface and Its Implementations
+The Map interface stores data as key-value pairs, similar to a dictionary. Each key is unique, and it maps to a single value. Map does not extend the Collection interface.
+5.1. HashMap
+•	Key Characteristics:
+o	No Order Guarantee: HashMap does not guarantee any specific order of elements (insertion order, sorted order, etc.). The order can change over time.
+o	Allows Nulls: It allows one null key and multiple null values.
+o	Not Synchronized: HashMap is not thread-safe. Concurrent modifications can lead to inconsistent results or ConcurrentModificationException.
+o	Performance: Provides constant-time performance (O(1)) on average for basic operations like get, put, remove, and containsKey.
+•	Internal Structure:
+o	HashMap internally uses an array (called buckets) to store key-value pairs.
+o	Each bucket in the array can store multiple key-value pairs in case of collisions.
+o	Hash Function: A hash function is used to convert the key into a numerical hash code. This hash code is then used to calculate the index in the internal array (hashCode() % arraySize) where the key-value pair should be stored or retrieved.
+o	Collision Handling: When two different keys produce the same hash code (a collision), HashMap handles this by storing multiple entries at the same array index. 
+	Before Java 8: Collisions were handled using a singly LinkedList at that bucket.
+	Java 8 onwards: If the number of entries in a single bucket (linked list) exceeds a certain TREEIFY_THRESHOLD (default 8), the LinkedList is converted into a balanced binary search tree (specifically a Red-Black Tree) to improve search performance from O(n) to O(log n) in the worst-case scenario.
+o	hashCode() and equals(): For HashMap to function correctly, the keys must properly implement the hashCode() and equals() methods. 
+	hashCode(): Used to determine the bucket where an entry should go.
+	equals(): Used to compare keys within a bucket (e.g., within a linked list or tree) to find the correct entry. If hashCode() is equal, equals() is called to confirm true equality.
+	Default Behavior: For custom objects, the default hashCode() is based on the object's memory address, and the default equals() checks for reference equality (==). This often leads to issues where logically equal objects are treated as different keys in HashMap.
+o	rehash (Resizing): 
+	HashMap resizes its internal array when the number of elements exceeds capacity * loadFactor.
+	The default initial capacity is 16, and the default load factor is 0.75.
+	When resizing occurs, the internal array doubles in size, and all existing entries are "rehashed" (their new positions in the larger array are recalculated and copied).
+•	Time Complexity:
+o	put, get, remove, containsKey: O(1) on average. In the worst case (due to many collisions leading to a long linked list or tree), it can be O(n) for linked list or O(log n) for Red-Black Tree.
+o	containsValue: O(n) because it needs to iterate over all values.
+o	size / isEmpty: O(1) as the size is stored in a separate field.
+•	Coding Examples:
+•	import java.util.HashMap;
+•	import java.util.Map;
+•	import java.util.Objects;
+•	
+•	public class HashMapDemo {
+•	    public static void main(String[] args) {
+•	        // Creation
+•	        Map<Integer, String> studentMap = new HashMap<>(); // Key: Integer (Roll No), Value: String (Name)
+•	
+•	        // put (insert elements)
+•	        studentMap.put(1, "Akshit");
+•	        studentMap.put(2, "Neha");
+•	        studentMap.put(3, "Shubham");
+•	        System.out.println("Student Map: " + studentMap); // Output: {1=Akshit, 2=Neha, 3=Shubham} (Order not guaranteed)
+•	
+•	        // get (retrieve elements)
+•	        System.out.println("Student with roll no 3: " + studentMap.get(3)); // Output: Shubham
+•	        System.out.println("Student with roll no 99: " + studentMap.get(99)); // Output: null (key not found)
+•	
+•	        // containsKey
+•	        System.out.println("Map contains key 2? " + studentMap.containsKey(2)); // Output: true
+•	
+•	        // containsValue
+•	        System.out.println("Map contains value 'Neha'? " + studentMap.containsValue("Neha")); // Output: true
+•	
+•	        // Iterating using keySet()
+•	        System.out.println("\nIterating using keySet():");
+•	        for (Integer rollNo : studentMap.keySet()) {
+•	            System.out.println("Roll No: " + rollNo + ", Name: " + studentMap.get(rollNo));
+•	        }
+•	        // Output order might vary (e.g., Roll No: 1, Name: Akshit ... or 2, 1, 3 etc.)
+•	
+•	        // Iterating using entrySet()
+•	        System.out.println("\nIterating using entrySet():");
+•	        for (Map.Entry<Integer, String> entry : studentMap.entrySet()) {
+•	            System.out.println("Key: " + entry.getKey() + ", Value: " + entry.getValue());
+•	            // entry.setValue(entry.getValue().toUpperCase()); // Modifying value during iteration
+•	        }
+•	        // System.out.println("Map after modifying values (if uncommented): " + studentMap); // All values uppercase
+•	
+•	        // Null values and keys
+•	        studentMap.put(null, "Manager"); // One null key allowed
+•	        studentMap.put(4, null); // Multiple null values allowed
+•	        System.out.println("Map with null key/value: " + studentMap);
+•	
+•	        // put vs replace (same key replaces value)
+•	        studentMap.put(1, "Akshit Sharma"); // Replaces "Akshit" with "Akshit Sharma"
+•	        System.out.println("Map after replacing value for key 1: " + studentMap);
+•	
+•	        // remove
+•	        studentMap.remove(4); // Removes entry with key 4
+•	        System.out.println("Map after removing key 4: " + studentMap);
+•	
+•	        // remove (key-value pair)
+•	        boolean removed = studentMap.remove(1, "Akshit"); // False, because value is now "Akshit Sharma"
+•	        System.out.println("Was 1='Akshit' removed? " + removed);
+•	        System.out.println("Map after remove(key, value) attempt: " + studentMap);
+•	
+•	        // getOrDefault (Java 8+)
+•	        System.out.println("Student with roll no 5: " + studentMap.getOrDefault(5, "Default Name")); // Output: Default Name
+•	        System.out.println("Student with roll no 2: " + studentMap.getOrDefault(2, "Default Name")); // Output: Neha
+•	
+•	        // putIfAbsent (Java 8+)
+•	        studentMap.putIfAbsent(1, "New Akshit"); // Won't put, as key 1 already exists
+•	        studentMap.putIfAbsent(5, "New Student"); // Will put, as key 5 doesn't exist
+•	        System.out.println("Map after putIfAbsent: " + studentMap); // Key 1 remains "Akshit Sharma", key 5 is "New Student"
+•	    }
+•	}
+•	
+•	// Custom class for demonstrating hashCode() and equals()
+•	class Person {
+•	    private String name;
+•	    private int id;
+•	
+•	    public Person(String name, int id) {
+•	        this.name = name;
+•	        this.id = id;
+•	    }
+•	
+•	    public String getName() { return name; }
+•	    public int getId() { return id; }
+•	
+•	    // Override equals() and hashCode() for correct HashMap behavior
+•	    @Override
+•	    public boolean equals(Object o) { //
+•	        if (this == o) return true; // Same object reference
+•	        if (o == null || getClass() != o.getClass()) return false; // Null or different class
+•	        Person person = (Person) o; // Cast to Person
+•	        return id == person.id && Objects.equals(name, person.name); // Compare based on content
+•	    }
+•	
+•	    @Override
+•	    public int hashCode() { //
+•	        return Objects.hash(name, id); // Generates hash based on content
+•	    }
+•	
+•	    @Override
+•	    public String toString() { // To print objects nicely
+•	        return "Person{name='" + name + "', id=" + id + "}";
+•	    }
+•	}
+5.2. LinkedHashMap
+•	Key Difference: LinkedHashMap maintains the insertion order of its elements. When you iterate over a LinkedHashMap, the elements will be returned in the order they were inserted.
+•	Internal Working: It extends HashMap and internally uses a doubly linked list that runs through all its entries. This linked list dictates the iteration order.
+•	Performance: Slightly slower than HashMap due to the overhead of maintaining the linked list, but still offers O(1) average time complexity for most operations (like put, get).
+•	accessOrder: A constructor parameter (boolean accessOrder) that, if set to true, makes the LinkedHashMap maintain elements in access order (elements accessed recently are moved to the end of the list), which is useful for implementing LRU (Least Recently Used) caches. By default, accessOrder is false (maintains insertion order).
+•	Not Synchronized: Like HashMap, LinkedHashMap is not thread-safe.
+•	Coding Examples:
+•	import java.util.LinkedHashMap;
+•	import java.util.Map;
+•	
+•	public class LinkedHashMapDemo {
+•	    public static void main(String[] args) {
+•	        // LinkedHashMap maintains insertion order
+•	        Map<String, Integer> fruitMap = new LinkedHashMap<>();
+•	        fruitMap.put("Orange", 10);
+•	        fruitMap.put("Apple", 5);
+•	        fruitMap.put("Guava", 15);
+•	        System.out.println("LinkedHashMap (insertion order): " + fruitMap); // Output: {Orange=10, Apple=5, Guava=15}
+•	
+•	        // Comparison with HashMap (no order guarantee)
+•	        Map<String, Integer> hashMap = new java.util.HashMap<>();
+•	        hashMap.put("Orange", 10);
+•	        hashMap.put("Apple", 5);
+•	        hashMap.put("Guava", 15);
+•	        System.out.println("HashMap (order not guaranteed): " + hashMap); // Output: {Apple=5, Guava=15, Orange=10} (order can vary)
+•	
+•	        // LinkedHashMap with accessOrder = true (for LRU Cache)
+•	        // LRUCache (Least Recently Used Cache) Implementation
+•	        class LRUCache extends LinkedHashMap<String, Integer> {
+•	            private int capacity;
+•	
+•	            public LRUCache(int capacity) {
+•	                // super(initialCapacity, loadFactor, accessOrder);
+•	                // accessOrder = true means elements are reordered on access (get, put)
+•	                super(capacity, 0.75f, true); // initialCapacity, loadFactor, accessOrder
+•	                this.capacity = capacity;
+•	            }
+•	
+•	            @Override
+•	            protected boolean removeEldestEntry(Map.Entry<String, Integer> eldest) {
+•	                // This method is invoked by put and putAll after inserting a new entry.
+•	                // It returns true if this map should remove its eldest entry.
+•	                return size() > capacity; // Remove if size exceeds capacity
+•	            }
+•	        }
+•	
+•	        LRUCache lruCache = new LRUCache(3); // Capacity of 3
+•	        lruCache.put("Bob", 99);
+•	        lruCache.put("Alice", 89);
+•	        lruCache.put("Ram", 91);
+•	        System.out.println("\nLRU Cache (Initial): " + lruCache); // Output: {Bob=99, Alice=89, Ram=91}
+•	
+•	        lruCache.put("Vipul", 89); // Adds Vipul, Bob (eldest) should be removed
+•	        System.out.println("LRU Cache after adding Vipul: " + lruCache); // Output: {Alice=89, Ram=91, Vipul=89} (Bob removed)
+•	
+•	        lruCache.get("Alice"); // Access Alice, so Alice moves to the end of the order
+•	        System.out.println("LRU Cache after accessing Alice: " + lruCache); // Output: {Ram=91, Vipul=89, Alice=89}
+•	
+•	        lruCache.put("Charlie", 95); // Adds Charlie, Ram (eldest now) should be removed
+•	        System.out.println("LRU Cache after adding Charlie: " + lruCache); // Output: {Vipul=89, Alice=89, Charlie=95} (Ram removed)
+•	    }
+•	}
+5.3. WeakHashMap
+•	Weak References: WeakHashMap is a specialized HashMap where the keys are stored as WeakReferences. This means that if a key object has no other strong references pointing to it, the Garbage Collector (JVM) can reclaim the memory occupied by that key (and its corresponding value).
+•	Purpose: Primarily used for caching where entries can be automatically removed from the map if their keys are no longer strongly referenced elsewhere in the application. This helps prevent memory leaks for cached data that is no longer actively used.
+•	Garbage Collection: The JVM's garbage collector operates automatically. While System.gc() can suggest running garbage collection, the JVM makes the final decision.
+•	Strong vs. Weak Reference:
+o	Strong Reference: The most common type of reference (e.g., Object obj = new Object();). As long as a strong reference exists, the object will not be garbage collected.
+o	Weak Reference: A weaker type of reference. If the only references to an object are weak references, the object is eligible for garbage collection.
+•	Limitation: Keys that are String literals (e.g., "Image One") are stored in the String Pool and are considered strong references throughout the program's lifecycle. Thus, WeakHashMap won't garbage collect them. To demonstrate the effect, non-literal String objects or custom objects must be used as keys.
+•	Coding Examples:
+•	import java.lang.ref.WeakReference;
+•	import java.util.Map;
+•	import java.util.WeakHashMap;
+•	import java.util.concurrent.TimeUnit;
+•	
+•	public class WeakHashMapDemo {
+•	    // Custom Image class
+•	    static class Image {
+•	        String name;
+•	
+•	        public Image(String name) {
+•	            this.name = name;
+•	        }
+•	
+•	        @Override
+•	        public String toString() {
+•	            return "Image{" + "name='" + name + "'}";
+•	        }
+•	    }
+•	
+•	    public static void main(String[] args) throws InterruptedException {
+•	        // Demonstrating WeakReference concept
+•	        System.out.println("--- WeakReference Demo ---");
+•	        WeakReference<Image> weakImageRef = new WeakReference<>(new Image("Transient Image"));
+•	        System.out.println("Before GC Suggestion (WeakRef): " + weakImageRef.get()); // Output: Image{name='Transient Image'}
+•	        System.gc(); // Suggest garbage collection
+•	        TimeUnit.SECONDS.sleep(1); // Wait for GC to potentially run
+•	        System.out.println("After GC Suggestion (WeakRef): " + weakImageRef.get()); // Output: null (if GC ran)
+•	
+•	        // WeakHashMap demonstration
+•	        System.out.println("\n--- WeakHashMap Demo ---");
+•	
+•	        Map<Image, String> imageCache = new WeakHashMap<>();
+•	
+•	        // Use non-literal String objects for keys to allow GC
+•	        Image key1 = new Image("ImageOne");
+•	        Image key2 = new Image("ImageTwo");
+•	
+•	        imageCache.put(key1, "Data for ImageOne");
+•	        imageCache.put(key2, "Data for ImageTwo");
+•	        System.out.println("Image Cache (Initial): " + imageCache); // Output: {ImageOne=Data for ImageOne, ImageTwo=Data for ImageTwo}
+•	
+•	        // Nullify strong references to keys
+•	        key1 = null;
+•	        key2 = null;
+•	        System.out.println("Strong references to keys nullified.");
+•	
+•	        System.gc(); // Suggest garbage collection
+•	        TimeUnit.SECONDS.sleep(1); // Give GC time to run
+•	
+•	        System.out.println("Image Cache (After GC Suggestion): " + imageCache); // Output: {} (keys and values garbage collected)
+•	
+•	        // Using WeakHashMap with local strong references within a method
+•	        System.out.println("\n--- WeakHashMap with Method Scope Keys ---");
+•	        Map<Image, String> methodScopeCache = new WeakHashMap<>();
+•	        loadCache(methodScopeCache); // Keys are strongly referenced inside loadCache method, but not outside
+•	
+•	        System.gc();
+•	        TimeUnit.SECONDS.sleep(1);
+•	        System.out.println("Method Scope Cache (After GC Suggestion): " + methodScopeCache); // Should be empty
+•	    }
+•	
+•	    // Helper method to simulate loading cache with local strong references
+•	    public static void loadCache(Map<Image, String> cache) {
+•	        Image localKey1 = new Image("LocalImageOne");
+•	        Image localKey2 = new Image("LocalImageTwo");
+•	        cache.put(localKey1, "Data for LocalImageOne");
+•	        cache.put(localKey2, "Data for LocalImageTwo");
+•	        System.out.println("Inside loadCache: " + cache); // Output: {LocalImageOne=..., LocalImageTwo=...}
+•	    }
+•	}
+5.4. IdentityHashMap
+•	Key Difference: IdentityHashMap uses reference equality (==) for comparing keys instead of content equality (equals()). Similarly, it uses System.identityHashCode() for hashing keys, which is based on the object's memory address, regardless of how hashCode() is overridden in the key class.
+•	Purpose: It's useful in special cases where you need to check if keys are the exact same object instance, rather than just having the same content.
+•	Comparison with HashMap:
+o	HashMap: key1.equals(key2) and key1.hashCode() == key2.hashCode() determine equality.
+o	IdentityHashMap: key1 == key2 determines equality, and System.identityHashCode(key) is used for hashing.
+•	Coding Examples:
+•	import java.util.HashMap;
+•	import java.util.IdentityHashMap;
+•	import java.util.Map;
+•	
+•	public class IdentityHashMapDemo {
+•	    public static void main(String[] args) {
+•	        // Create two String objects with the same content but different memory addresses
+•	        String keyContent1 = "key";
+•	        String keyContent2 = "key";
+•	        String keyRef1 = new String("key"); // Different memory address
+•	        String keyRef2 = new String("key"); // Different memory address
+•	
+•	        // --- HashMap behavior ---
+•	        System.out.println("--- HashMap Demo ---");
+•	        Map<String, String> hashMap = new HashMap<>();
+•	        hashMap.put(keyRef1, "Value1"); // Puts "key" -> "Value1"
+•	        hashMap.put(keyRef2, "Value2"); // Puts "key" -> "Value2", replaces Value1 as keys are content-equal
+•	        System.out.println("HashMap: " + hashMap); // Output: {key=Value2}
+•	        System.out.println("HashMap size: " + hashMap.size()); // Output: 1
+•	
+•	        // Check hashCode() and equals() for String objects
+•	        System.out.println("keyRef1.hashCode(): " + keyRef1.hashCode()); // Same hash as keyRef2 due to String's hashCode
+•	        System.out.println("keyRef2.hashCode(): " + keyRef2.hashCode());
+•	        System.out.println("keyRef1.equals(keyRef2): " + keyRef1.equals(keyRef2)); // True, content is same
+•	
+•	        // System.identityHashCode() (memory address based)
+•	        System.out.println("System.identityHashCode(keyRef1): " + System.identityHashCode(keyRef1)); // Different hash for different objects
+•	        System.out.println("System.identityHashCode(keyRef2): " + System.identityHashCode(keyRef2));
+•	
+•	        // --- IdentityHashMap behavior ---
+•	        System.out.println("\n--- IdentityHashMap Demo ---");
+•	        Map<String, String> identityHashMap = new IdentityHashMap<>();
+•	        identityHashMap.put(keyRef1, "Value1"); // Puts first "key" object
+•	        identityHashMap.put(keyRef2, "Value2"); // Puts second "key" object, as it's a different instance
+•	        System.out.println("IdentityHashMap: " + identityHashMap); // Output: {key=Value1, key=Value2} (both keys are distinct instances)
+•	        System.out.println("IdentityHashMap size: " + identityHashMap.size()); // Output: 2
+•	
+•	        // Using String literals (which might be interned, leading to same reference)
+•	        String literalKey1 = "literalKey";
+•	        String literalKey2 = "literalKey";
+•	        identityHashMap.put(literalKey1, "LiteralValue1");
+•	        identityHashMap.put(literalKey2, "LiteralValue2"); // This might overwrite LiteralValue1 if interned
+•	        System.out.println("IdentityHashMap with literals: " + identityHashMap);
+•	        System.out.println("IdentityHashMap size with literals: " + identityHashMap.size()); // Could be 3 if interned, 4 if not.
+•	    }
+•	}
+5.5. SortedMap Interface and TreeMap
+•	SortedMap Interface: This interface (e.g., java.util.SortedMap) guarantees that the entries are sorted based on their keys. The sorting can be either by the keys' natural ordering (if keys implement Comparable) or by a custom Comparator provided at map creation.
+•	TreeMap: This is the primary implementation of SortedMap (and also NavigableMap).
+•	Internal Working: TreeMap internally uses a Red-Black Tree, which is a self-balancing binary search tree. This ensures that tree operations like insertion, deletion, and search remain efficient (O(log n)) even in the worst case, by automatically rebalancing the tree.
+•	Key Features:
+o	Sorted Keys: Always keeps its entries sorted by key.
+o	No Null Keys (usually): Keys must be comparable, so usually no null keys are allowed (unless custom comparator handles it). Null values are allowed.
+o	Not Synchronized: TreeMap is not thread-safe.
+•	Time Complexity:
+o	put, get, remove, containsKey: O(log n) (logarithmic time) due to tree traversal.
+o	containsValue: O(n) as it requires iterating through all values, which are not sorted.
+•	NavigableMap Interface: This interface extends SortedMap and provides additional navigation methods for finding closest matches and retrieving subsets of the map based on ranges. TreeMap implements NavigableMap.
+o	Examples: firstKey(), lastKey(), headMap(), tailMap(), subMap(), lowerKey(), ceilingKey(), higherKey(), descendingMap().
+•	Coding Examples:
+•	import java.util.Comparator;
+•	import java.util.NavigableMap;
+•	import java.util.SortedMap;
+•	import java.util.TreeMap;
+•	
+•	public class SortedMapDemo {
+•	    public static void main(String[] args) {
+•	        // TreeMap with natural ordering (keys must be Comparable, e.g., Integer, String)
+•	        TreeMap<Integer, String> studentMarksMap = new TreeMap<>();
+•	        studentMarksMap.put(91, "Vivek");
+•	        studentMarksMap.put(99, "Shubham");
+•	        studentMarksMap.put(78, "Mohit");
+•	        studentMarksMap.put(77, "Vipul"); // Adding a new entry
+•	
+•	        // Output will be sorted by keys (natural order for Integers)
+•	        System.out.println("TreeMap (natural order): " + studentMarksMap); // Output: {77=Vipul, 78=Mohit, 91=Vivek, 99=Shubham}
+•	
+•	        // Using SortedMap as reference type (access to SortedMap methods)
+•	        SortedMap<Integer, String> sortedMap = studentMarksMap;
+•	        System.out.println("First Key: " + sortedMap.firstKey()); // Output: 77
+•	        System.out.println("Last Key: " + sortedMap.lastKey());   // Output: 99
+•	
+•	        // headMap (exclusive of 'toKey')
+•	        System.out.println("Head Map (keys < 91): " + sortedMap.headMap(91)); // Output: {77=Vipul, 78=Mohit}
+•	
+•	        // tailMap (inclusive of 'fromKey')
+•	        System.out.println("Tail Map (keys >= 91): " + sortedMap.tailMap(91)); // Output: {91=Vivek, 99=Shubham}
+•	
+•	        // subMap (fromKey inclusive, toKey exclusive)
+•	        System.out.println("Sub Map (keys >= 78 and < 91): " + sortedMap.subMap(78, 91)); // Output: {78=Mohit}
+•	
+•	        // TreeMap with custom Comparator (e.g., descending order)
+•	        // Pass a Comparator in the constructor
+•	        TreeMap<Integer, String> descendingMap = new TreeMap<>(Comparator.reverseOrder()); // Standard comparator for reverse order
+•	        descendingMap.put(91, "Vivek");
+•	        descendingMap.put(99, "Shubham");
+•	        descendingMap.put(78, "Mohit");
+•	        descendingMap.put(77, "Vipul");
+•	        System.out.println("\nTreeMap (descending order): " + descendingMap); // Output: {99=Shubham, 91=Vivek, 78=Mohit, 77=Vipul}
+•	
+•	        // Using NavigableMap as reference type (access to NavigableMap methods)
+•	        NavigableMap<Integer, String> navigableMap = studentMarksMap; // Using original sortedMap for clarity
+•	        System.out.println("\n--- NavigableMap Methods ---");
+•	        System.out.println("Lower Key (strictly less than 78): " + navigableMap.lowerKey(78)); // Output: 77
+•	        System.out.println("Ceiling Key (greater than or equal to 78): " + navigableMap.ceilingKey(78)); // Output: 78
+•	        System.out.println("Higher Key (strictly greater than 91): " + navigableMap.higherKey(91)); // Output: 99
+•	        System.out.println("First Entry (complete entry): " + navigableMap.firstEntry()); // Output: 77=Vipul
+•	        System.out.println("Descending Map: " + navigableMap.descendingMap()); // Output: {99=Shubham, 91=Vivek, 78=Mohit, 77=Vipul}
+•	    }
+•	}
+5.6. Hashtable
+•	Legacy Class: Hashtable is another legacy class from JDK 1.0, existing before the Collection Framework. It implements the Map interface.
+•	Key Characteristics:
+o	Synchronized (Thread-Safe): All its methods are synchronized, making it thread-safe. This means only one thread can modify or even read the Hashtable at a time.
+o	No Nulls: Does not allow null keys or null values. Attempting to add a null key or value will throw a NullPointerException.
+o	Performance: Generally slower than HashMap due to the overhead of synchronization, especially in single-threaded or low-concurrency environments. The fact that even read operations (get) are synchronized makes it less performant than ConcurrentHashMap in high-concurrency scenarios.
+o	Collision Handling: Unlike HashMap (Java 8+), Hashtable uses only LinkedList for collision resolution; it does not treeify buckets.
+•	When to Use: It's generally advised to avoid Hashtable in new code. ConcurrentHashMap is the modern and more performant alternative for thread-safe map operations.
+•	Coding Examples:
+•	import java.util.Hashtable;
+•	import java.util.Map;
+•	import java.util.concurrent.ConcurrentHashMap;
+•	
+•	public class HashtableDemo {
+•	    public static void main(String[] args) throws InterruptedException {
+•	        // Creation
+•	        Hashtable<Integer, String> hashtable = new Hashtable<>();
+•	
+•	        // Put elements
+•	        hashtable.put(1, "Apple");
+•	        hashtable.put(2, "Banana");
+•	        hashtable.put(3, "Cherry");
+•	        System.out.println("Hashtable: " + hashtable); // Output: {3=Cherry, 2=Banana, 1=Apple} (order not guaranteed)
+•	
+•	        // Get elements
+•	        System.out.println("Value for key 2: " + hashtable.get(2)); // Output: Banana
+•	
+•	        // Check existence
+•	        System.out.println("Contains key 3? " + hashtable.containsKey(3)); // Output: true
+•	        System.out.println("Contains value 'Apple'? " + hashtable.containsValue("Apple")); // Output: true
+•	
+•	        // Remove elements
+•	        hashtable.remove(1);
+•	        System.out.println("Hashtable after removing key 1: " + hashtable); // Output: {3=Cherry, 2=Banana}
+•	
+•	        // Null key/value (throws NullPointerException)
+•	        // hashtable.put(null, "Null Key"); // Throws NullPointerException
+•	        // hashtable.put(4, null);     // Throws NullPointerException
+•	
+•	        // --- Thread Safety Demo ---
+•	        System.out.println("\n--- Thread Safety Demo ---");
+•	
+•	        // HashMap (Not Thread-Safe)
+•	        Map<Integer, String> hashMapThreadSafety = new HashMap<>();
+•	        Runnable putTaskHashMap = () -> {
+•	            for (int i = 0; i < 1000; i++) {
+•	                hashMapThreadSafety.put(i, "Value" + i);
+•	            }
+•	        };
+•	        Thread t1_hashMap = new Thread(putTaskHashMap);
+•	        Thread t2_hashMap = new Thread(putTaskHashMap);
+•	        t1_hashMap.start();
+•	        t2_hashMap.start();
+•	        t1_hashMap.join();
+•	        t2_hashMap.join();
+•	        // Expected size 2000, but due to race conditions, it will be less
+•	        System.out.println("HashMap size (not thread-safe, actual might vary): " + hashMapThreadSafety.size()); // Output: e.g., 1797, 1922
+•	
+•	        // Hashtable (Thread-Safe)
+•	        Hashtable<Integer, String> hashtableThreadSafety = new Hashtable<>();
+•	        Runnable putTaskHashtable = () -> {
+•	            for (int i = 0; i < 1000; i++) {
+•	                hashtableThreadSafety.put(i, "Value" + i);
+•	            }
+•	        };
+•	        Thread t1_hashtable = new Thread(putTaskHashtable);
+•	        Thread t2_hashtable = new Thread(putTaskHashtable);
+•	        t1_hashtable.start();
+•	        t2_hashtable.start();
+•	        t1_hashtable.join();
+•	        t2_hashtable.join();
+•	        // Expected size 2000, and it will be 2000 due to synchronization
+•	        System.out.println("Hashtable size (thread-safe): " + hashtableThreadSafety.size()); // Output: 2000
+•	    }
+•	}
+5.7. ConcurrentHashMap
+•	Problem Solved: Hashtable's synchronization of all methods (including reads) leads to performance bottlenecks in high-concurrency environments. ConcurrentHashMap was designed to provide highly concurrent (thread-safe) map operations without excessive locking.
+•	Key Characteristics:
+o	Thread-Safe: It is thread-safe and provides better concurrency than Hashtable.
+o	Allows Nulls: Unlike Hashtable, it does not allow null keys or null values. (Correction: The source states ConcurrentHashMap allows null values but not null keys. [Source implies this distinction indirectly by focusing on Hashtable's null restriction] - Self-correction based on common Java knowledge: ConcurrentHashMap generally does not allow null keys or null values.)
+•	Internal Working:
+o	Java 7: Used segment-based locking. The map was divided into fixed segments (default 16), and each segment had its own lock. A thread would only lock the specific segment it was writing to, allowing other segments to be accessed concurrently.
+o	Java 8 onwards: The segment-based locking was removed. ConcurrentHashMap now uses a more fine-grained approach based on Compare-And-Swap (CAS) operations. 
+	CAS (Compare-And-Swap): A non-blocking atomic operation. It attempts to update a value only if the current value matches an expected value. If the update fails (meaning another thread changed the value), it retries the operation. This minimizes locking.
+	Locking in Java 8 ConcurrentHashMap: Locks are only applied to specific buckets when a collision occurs (and a linked list/tree needs modification) or during a resize (rehashing) operation. Read operations are generally lock-free.
+	Incremental Resizing: Rehashing in ConcurrentHashMap is incremental. Instead of doubling the entire array at once (like HashMap), it resizes step-by-step, potentially allowing concurrent operations during the resize process.
+•	Performance: Offers high throughput because it allows multiple threads to read and write concurrently to different parts of the map with minimal locking.
+•	Coding Examples:
+•	import java.util.concurrent.ConcurrentHashMap;
+•	import java.util.Map;
+•	
+•	public class ConcurrentHashMapDemo {
+•	    public static void main(String[] args) {
+•	        // Creation
+•	        ConcurrentHashMap<String, Integer> map = new ConcurrentHashMap<>();
+•	
+•	        // Basic operations are similar to HashMap
+•	        map.put("Apple", 1);
+•	        map.put("Banana", 2);
+•	        System.out.println("ConcurrentHashMap: " + map);
+•	
+•	        // Thread-safety is implicit in its design
+•	        // (Example is similar to Hashtable, just replacing Hashtable with ConcurrentHashMap)
+•	        // It would show 2000 size for a 2000 total put operation across threads.
+•	        // Read operations are generally lock-free in Java 8+
+•	    }
+•	}
+5.8. ConcurrentSkipListMap
+•	Problem Solved: Provides a thread-safe and sorted map. It's a concurrent version of TreeMap.
+•	Internal Working: Uses a Skip List data structure.
+o	Skip List: A probabilistic data structure that works like a sorted linked list with multiple layers (or levels). Each element has a probability of being "promoted" to higher levels, allowing for faster search, insertion, and deletion operations (logarithmic time) by "skipping" over parts of the list.
+o	Concurrency Advantage: Skip lists are simpler to implement concurrently than balanced trees (like Red-Black Trees in TreeMap), as they require less complex rebalancing logic.
+•	Key Features:
+o	Sorted Keys: Always maintains keys in sorted order.
+o	Thread-Safe: Provides built-in thread safety for all operations.
+o	Scalability: Well-suited for high-concurrency environments where sorting is also required.
+•	Time Complexity: O(log n) for put, get, remove, and containsKey operations.
+•	Coding Examples:
+•	import java.util.concurrent.ConcurrentSkipListMap;
+•	import java.util.NavigableMap;
+•	
+•	public class ConcurrentSkipListMapDemo {
+•	    public static void main(String[] args) {
+•	        // Creation
+•	        // Can be referenced by NavigableMap as it implements it
+•	        NavigableMap<Integer, String> concurrentSortedMap = new ConcurrentSkipListMap<>();
+•	
+•	        // Elements are added and automatically sorted by key
+•	        concurrentSortedMap.put(3, "Cherry");
+•	        concurrentSortedMap.put(1, "Apple");
+•	        concurrentSortedMap.put(2, "Banana");
+•	        System.out.println("ConcurrentSkipListMap (sorted): " + concurrentSortedMap); // Output: {1=Apple, 2=Banana, 3=Cherry}
+•	
+•	        // All NavigableMap methods like firstKey(), lastKey(), subMap(), lowerKey(), etc., are available.
+•	        System.out.println("First Key: " + concurrentSortedMap.firstKey()); // Output: 1
+•	
+•	        // This map is thread-safe for concurrent operations (not explicitly demonstrated here but is a core feature)
+•	    }
+•	}
+5.9. EnumMap
+•	Specialized Map for Enum Keys: EnumMap is a highly specialized Map implementation designed for use with enum types as keys.
+•	Key Characteristics:
+o	High Performance: It is extremely efficient and fast because it uses an internal array whose size is determined by the number of enum constants. This means there is no hashing or collision resolution needed.
+o	Memory Efficient: It is very memory efficient.
+o	Order Maintained: It maintains the natural order of the enum constants (the order in which they are declared in the enum).
+o	No Null Keys: It does not allow null keys.
+•	Internal Working: When you create an EnumMap by specifying the enum class in its constructor, it automatically knows all possible keys beforehand. It uses the ordinal() value of each enum constant as the index in its internal array.
+•	Recommendation: If all keys in your map are from a single enum type, it is highly recommended to use EnumMap over HashMap for better performance and memory efficiency.
+•	Coding Examples:
+•	import java.util.EnumMap;
+•	import java.util.Map;
+•	
+•	public class EnumMapDemo {
+•	    // Define an Enum
+•	    enum Day {
+•	        MONDAY, TUESDAY, WEDNESDAY, THURSDAY, FRIDAY, SATURDAY, SUNDAY
+•	    }
+•	
+•	    public static void main(String[] args) {
+•	        // Creating an EnumMap
+•	        // Pass the Enum class in the constructor
+•	        Map<Day, String> dailyActivities = new EnumMap<>(Day.class);
+•	
+•	        // Add elements (using enum constants as keys)
+•	        dailyActivities.put(Day.TUESDAY, "Gym");
+•	        dailyActivities.put(Day.MONDAY, "Walk"); // Added later, but MONDAY comes before TUESDAY in enum declaration
+•	        dailyActivities.put(Day.WEDNESDAY, "Code");
+•	
+•	        // EnumMap maintains the order of enum constants
+•	        System.out.println("EnumMap: " + dailyActivities); // Output: {MONDAY=Walk, TUESDAY=Gym, WEDNESDAY=Code}
+•	
+•	        // Get elements (uses ordinal for fast access)
+•	        System.out.println("Activity on TUESDAY: " + dailyActivities.get(Day.TUESDAY)); // Output: Gym
+•	
+•	        // Ordinal value of enum constant
+•	        System.out.println("MONDAY ordinal: " + Day.MONDAY.ordinal()); // Output: 0
+•	        System.out.println("TUESDAY ordinal: " + Day.TUESDAY.ordinal()); // Output: 1
+•	
+•	        // Null key/value (not allowed, throws NullPointerException)
+•	        // dailyActivities.put(null, "No Day"); // Throws NullPointerException
+•	    }
+•	}
+5.10. Immutable Maps
+Immutable maps are maps whose contents cannot be modified after they are created. This means you cannot add, remove, or update elements once the map is instantiated.
+•	Collections.unmodifiableMap(Map<? extends K, ? extends V> m):
+o	Returns an unmodifiable view of the specified map.
+o	The original map can still be modified, and changes in the original map will be reflected in the unmodifiable view.
+o	Attempting to modify the returned map will throw an UnsupportedOperationException.
+•	Map.of(K k1, V v1, ...) (Java 9+):
+o	Introduced in Java 9, this static factory method creates a directly immutable map.
+o	It's a cleaner way to create small, fixed-content maps.
+o	Limitation: Map.of() methods are overloaded for up to 10 key-value pairs. For more than 10, you'll need Map.ofEntries() or Map.copyOf().
+•	Map.ofEntries(Map.Entry<? extends K, ? extends V>... entries) (Java 9+):
+o	Used to create immutable maps with more than 10 entries.
+o	You pass Map.Entry objects (created using Map.entry(K k, V v)).
+•	Coding Examples:
+•	import java.util.Collections;
+•	import java.util.HashMap;
+•	import java.util.Map;
+•	
+•	public class ImmutableMapDemo {
+•	    public static void main(String[] args) {
+•	        // 1. Collections.unmodifiableMap()
+•	        Map<String, Integer> mutableMap = new HashMap<>();
+•	        mutableMap.put("One", 1);
+•	        mutableMap.put("Two", 2);
+•	        System.out.println("Original mutable map: " + mutableMap);
+•	
+•	        Map<String, Integer> unmodifiableView = Collections.unmodifiableMap(mutableMap);
+•	        System.out.println("Unmodifiable view: " + unmodifiableView);
+•	
+•	        // Attempt to modify the view (throws UnsupportedOperationException)
+•	        // try {
+•	        //     unmodifiableView.put("Three", 3);
+•	        // } catch (UnsupportedOperationException e) {
+•	        //     System.out.println("Caught exception: " + e.getClass().getSimpleName()); // Output: UnsupportedOperationException
+•	        // }
+•	
+•	        // Modifying the original map affects the view
+•	        mutableMap.put("Three", 3);
+•	        System.out.println("Original map after modification: " + mutableMap);
+•	        System.out.println("Unmodifiable view (reflects original change): " + unmodifiableView); // Output: {One=1, Two=2, Three=3}
+•	
+•	        // 2. Map.of() (Java 9+)
+•	        // Limited to 10 key-value pairs
+•	        Map<String, Integer> immutableMap1 = Map.of("Shubham", 90, "Vivek", 89);
+•	        System.out.println("\nImmutable map (Map.of): " + immutableMap1);
+•	        // immutableMap1.put("Akshit", 88); // Throws UnsupportedOperationException
+•	
+•	        // 3. Map.ofEntries() (Java 9+)
+•	        // For more than 10 key-value pairs or programmatic creation
+•	        Map<String, Integer> immutableMap2 = Map.ofEntries(
+•	                Map.entry("Apple", 1),
+•	                Map.entry("Banana", 2),
+•	                Map.entry("Cherry", 3),
+•	                Map.entry("Date", 4),
+•	                Map.entry("Elderberry", 5),
+•	                Map.entry("Fig", 6),
+•	                Map.entry("Grape", 7),
+•	                Map.entry("Honeydew", 8),
+•	                Map.entry("Kiwi", 9),
+•	                Map.entry("Lemon", 10),
+•	                Map.entry("Mango", 11) // More than 10 entries
+•	        );
+•	        System.out.println("Immutable map (Map.ofEntries): " + immutableMap2);
+•	        // immutableMap2.put("Orange", 12); // Throws UnsupportedOperationException
+•	    }
+•	}
+6. Comparator vs. Comparable
+These interfaces are used for sorting elements in Java.
+•	Comparable Interface (java.lang.Comparable):
+o	Used for natural ordering. If a class implements Comparable, it defines its own default sorting behavior.
+o	Contains a single method: int compareTo(T o).
+o	Return Value: 
+	Negative integer: this object comes before o.
+	Zero: this object is equal to o.
+	Positive integer: this object comes after o.
+o	Typically implemented for primitive wrapper classes (e.g., Integer, String) or custom classes that have an inherent "natural" order (e.g., by ID, by name).
+•	Comparator Interface (java.util.Comparator):
+o	Used for custom ordering. When you need to sort objects based on criteria other than their natural order, or if the class does not implement Comparable.
+o	Contains a single abstract method: int compare(T o1, T o2).
+o	Return Value: Same as compareTo(): negative, zero, or positive to indicate the relative order of o1 and o2.
+o	Comparator implementations are often provided as anonymous classes or lambda expressions.
+o	Chaining: Multiple Comparators can be chained using default methods like thenComparing() for multi-criteria sorting.
+•	Coding Examples:
+•	import java.util.ArrayList;
+•	import java.util.Collections;
+•	import java.util.Comparator;
+•	import java.util.List;
+•	import java.util.Objects;
+•	
+•	// Student class for Comparator/Comparable demo
+•	class Student implements Comparable<Student> { // Implementing Comparable for natural ordering
+•	    private String name;
+•	    private double gpa;
+•	    private int age; // Added for more comparison criteria
+•	
+•	    public Student(String name, double gpa, int age) {
+•	        this.name = name;
+•	        this.gpa = gpa;
+•	        this.age = age;
+•	    }
+•	
+•	    public String getName() { return name; }
+•	    public double getGpa() { return gpa; }
+•	    public int getAge() { return age; }
+•	
+•	    @Override
+•	    public String toString() { // For pretty printing
+•	        return "Student{name='" + name + "', gpa=" + gpa + ", age=" + age + "}";
+•	    }
+•	
+•	    // Natural ordering for Student based on Name (alphabetical)
+•	    @Override
+•	    public int compareTo(Student other) {
+•	        // Using String's natural ordering (lexicographical)
+•	        return this.name.compareTo(other.name);
+•	    }
+•	
+•	    // Overriding equals and hashCode is crucial for Set/Map keys
+•	    @Override
+•	    public boolean equals(Object o) {
+•	        if (this == o) return true;
+•	        if (o == null || getClass() != o.getClass()) return false;
+•	        Student student = (Student) o;
+•	        return Double.compare(student.gpa, gpa) == 0 &&
+•	               age == student.age &&
+•	               Objects.equals(name, student.name);
+•	    }
+•	
+•	    @Override
+•	    public int hashCode() {
+•	        return Objects.hash(name, gpa, age);
+•	    }
+•	}
+•	
+•	public class ComparatorComparableDemo {
+•	    public static void main(String[] args) {
+•	        List<Student> students = new ArrayList<>();
+•	        students.add(new Student("Alice", 3.5, 20));
+•	        students.add(new Student("Bob", 3.7, 22));
+•	        students.add(new Student("Charlie", 3.5, 21));
+•	        students.add(new Student("Akshit", 3.9, 19)); // For GPA comparison
+•	
+•	        System.out.println("Original Student List: " + students);
+•	
+•	        // 1. Comparable (Natural Ordering)
+•	        // Student implements Comparable based on name
+•	        Collections.sort(students); // Sorts using Student's compareTo() method
+•	        System.out.println("\nSorted by Name (Comparable): " + students); // Output: Alice, Akshit, Bob, Charlie
+•	
+•	        // If Student did not implement Comparable, Collections.sort(students) would throw ClassCastException
+•	        List<Integer> numbers = new ArrayList<>(List.of(5, 2, 8, 1));
+•	        Collections.sort(numbers); // Works because Integer implements Comparable
+•	        System.out.println("Sorted Numbers (Comparable via Integer): " + numbers); // Output:
+•	
+•	        // 2. Comparator (Custom Ordering)
+•	        System.out.println("\n--- Custom Comparator Demos ---");
+•	
+•	        // Sort by GPA (descending)
+•	        // Lambda expression for Comparator
+•	        students.sort((s1, s2) -> Double.compare(s2.getGpa(), s1.getGpa())); // s2.getGpa() - s1.getGpa() for descending
+•	        System.out.println("Sorted by GPA (Descending): " + students); // Output: Akshit (3.9), Bob (3.7), Alice (3.5), Charlie (3.5)
+•	
+•	        // Sort by GPA (ascending)
+•	        students.sort((s1, s2) -> Double.compare(s1.getGpa(), s2.getGpa())); // s1.getGpa() - s2.getGpa() for ascending
+•	        System.out.println("Sorted by GPA (Ascending): " + students); // Output: Alice, Charlie, Bob, Akshit
+•	
+•	        // Sort by String Length (e.g., words)
+•	        List<String> words = new ArrayList<>(List.of("Apple", "Date", "Banana"));
+•	        words.sort((s1, s2) -> Integer.compare(s1.length(), s2.length())); // Ascending by length
+•	        System.out.println("Words sorted by length (Ascending): " + words); // Output: [Date, Apple, Banana]
+•	
+•	        // Sort by String Length (descending)
+•	        words = new ArrayList<>(List.of("Apple", "Date", "Banana"));
+•	        words.sort((s1, s2) -> Integer.compare(s2.length(), s1.length())); // Descending by length
+•	        System.out.println("Words sorted by length (Descending): " + words); // Output: [Banana, Apple, Date]
+•	
+•	        // Chaining Comparators (Sort by GPA descending, then by Name ascending for ties)
+•	        students.sort(Comparator.comparingDouble(Student::getGpa).reversed() // Sort by GPA descending
+•	                                 .thenComparing(Student::getName));           // Then by Name ascending
+•	        System.out.println("\nSorted by GPA (Desc) then Name (Asc): " + students);
+•	        // Output: Akshit (3.9), Bob (3.7), Alice (3.5), Charlie (3.5)
+•	        // Alice and Charlie have same GPA (3.5), so Alice comes before Charlie by name.
+•	
+•	        // Using custom Comparator class (old way)
+•	        class StringLengthComparator implements Comparator<String> {
+•	            @Override
+•	            public int compare(String s1, String s2) { //
+•	                return Integer.compare(s1.length(), s2.length());
+•	            }
+•	        }
+•	        List<String> fruits = new ArrayList<>(List.of("Orange", "Grape", "Apple"));
+•	        fruits.sort(new StringLengthComparator()); // Using instance of custom comparator class
+•	        System.out.println("Fruits sorted by length (custom class): " + fruits); // Output: [Grape, Apple, Orange]
+•	    }
+•	}
+7. Set Interface and Its Implementations
+The Set interface represents a collection that does not allow duplicate elements. It primarily focuses on the presence of an element, not its position.
+7.1. HashSet
+•	Internal Implementation: HashSet is backed by a HashMap internally.
+o	The elements added to the HashSet serve as the keys in the internal HashMap.
+o	A dummy value (a static Object constant) is stored for each key in the HashMap.
+•	Key Characteristics:
+o	No Duplicates: Automatically handles duplicate elements; if you try to add a duplicate, the add() method returns false and the set remains unchanged.
+o	No Order Guarantee: Like HashMap, HashSet does not guarantee any specific order of elements during iteration.
+o	Not Synchronized: HashSet is not thread-safe.
+o	Performance: Provides constant-time performance (O(1)) on average for add, remove, contains, and size operations.
+o	hashCode() and equals(): Relies on the proper implementation of hashCode() and equals() methods of the stored objects to correctly identify duplicates.
+•	Coding Examples:
+•	import java.util.HashSet;
+•	import java.util.LinkedHashSet;
+•	import java.util.Set;
+•	import java.util.TreeSet;
+•	import java.util.EnumSet;
+•	
+•	public class SetDemo {
+•	    enum Color { RED, GREEN, BLUE } // For EnumSet
+•	
+•	    public static void main(String[] args) {
+•	        // 1. HashSet (no order, no duplicates)
+•	        Set<Integer> hashSet = new HashSet<>();
+•	        hashSet.add(12);
+•	        hashSet.add(1);
+•	        hashSet.add(67);
+•	        hashSet.add(1); // Duplicate, will not be added
+•	        System.out.println("HashSet: " + hashSet); // Output: {1, 67, 12} (order varies)
+•	
+•	        System.out.println("Contains 12? " + hashSet.contains(12)); // Output: true
+•	        hashSet.remove(67); // Removes element
+•	        System.out.println("HashSet after removing 67: " + hashSet); // Output: {1, 12}
+•	        System.out.println("Is empty? " + hashSet.isEmpty()); // Output: false
+•	
+•	        // 2. LinkedHashSet (maintains insertion order)
+•	        // Internal: LinkedHashMap
+•	        Set<Integer> linkedHashSet = new LinkedHashSet<>();
+•	        linkedHashSet.add(12);
+•	        linkedHashSet.add(1);
+•	        linkedHashSet.add(67);
+•	        System.out.println("\nLinkedHashSet (maintains insertion order): " + linkedHashSet); // Output:
+•	
+•	        // 3. TreeSet (elements are sorted)
+•	        // Internal: TreeMap
+•	        // Elements must be Comparable or a Comparator must be provided in constructor
+•	        Set<Integer> treeSet = new TreeSet<>();
+•	        treeSet.add(12);
+•	        treeSet.add(1);
+•	        treeSet.add(67);
+•	        System.out.println("TreeSet (sorted order): " + treeSet); // Output:
+•	
+•	        // TreeSet implements NavigableSet
+•	        TreeSet<Integer> navigableTreeSet = (TreeSet<Integer>) treeSet;
+•	        System.out.println("Ceiling (element >= 10): " + navigableTreeSet.ceiling(10)); // Output: 12
+•	
+•	        // 4. EnumSet (specialized for Enums)
+•	        // Internal: Array
+•	        Set<Color> enumSet = EnumSet.of(Color.RED, Color.BLUE);
+•	        System.out.println("\nEnumSet: " + enumSet); // Output: [RED, BLUE] (maintains enum declaration order)
+•	    }
+•	}
+7.2. Synchronized and Concurrent Sets
+•	Collections.synchronizedSet(Set<T> s):
+o	This utility method (from java.util.Collections) creates a synchronized (thread-safe) wrapper or view around an existing Set.
+o	It achieves thread safety by wrapping all operations in synchronized blocks. This means all methods (including reads) are synchronized externally, leading to performance overhead.
+o	Generally not recommended for high concurrency as it can become a bottleneck.
+•	ConcurrentSkipListSet:
+o	A thread-safe, sorted Set implementation.
+o	It is the concurrent equivalent of TreeSet.
+o	Internal implementation: ConcurrentSkipListMap.
+o	Provides built-in thread safety using a Skip List, offering better scalability than Collections.synchronizedSet(new TreeSet()).
+•	CopyOnWriteArraySet:
+o	A thread-safe Set implementation that uses a copy-on-write mechanism.
+o	It is the Set equivalent of CopyOnWriteArrayList.
+o	Internal implementation: CopyOnWriteArrayList.
+o	Key Feature: When an element is added or removed, a new copy of the entire array is created. This makes it suitable for scenarios where reads vastly outnumber writes, and stable iterators (that do not reflect modifications during iteration) are required.
+o	Performance: Writes are expensive due to copying.
+o	Consistency: Iterators on CopyOnWriteArraySet provide a snapshot of the set at the time the iterator was created, meaning they do not reflect modifications made after the iterator was obtained (strong consistency). In contrast, ConcurrentSkipListSet iterators are "weakly consistent," meaning they may or may not reflect recent modifications.
+•	Immutable Sets (Java 9+):
+o	Set.of(E e1, E e2, ...): Creates a directly immutable Set. Unlike Map.of(), it does not have a 10-element limit.
+•	Coding Examples:
+•	import java.util.Collections;
+•	import java.util.HashSet;
+•	import java.util.Set;
+•	import java.util.concurrent.ConcurrentSkipListSet;
+•	import java.util.concurrent.CopyOnWriteArraySet;
+•	import java.util.List;
+•	import java.util.Arrays;
+•	
+•	public class ConcurrentSetDemo {
+•	    public static void main(String[] args) {
+•	        // 1. Collections.synchronizedSet()
+•	        Set<Integer> regularSet = new HashSet<>();
+•	        Set<Integer> synchronizedSet = Collections.synchronizedSet(regularSet); // Creates a synchronized view
+•	        synchronizedSet.add(1);
+•	        synchronizedSet.add(2);
+•	        System.out.println("Synchronized Set: " + synchronizedSet);
+•	        // All operations on synchronizedSet are now thread-safe due to external synchronization
+•	
+•	        // 2. ConcurrentSkipListSet (Thread-Safe & Sorted)
+•	        ConcurrentSkipListSet<Integer> concurrentSortedSet = new ConcurrentSkipListSet<>();
+•	        concurrentSortedSet.add(5);
+•	        concurrentSortedSet.add(1);
+•	        concurrentSortedSet.add(8);
+•	        System.out.println("\nConcurrentSkipListSet (thread-safe, sorted): " + concurrentSortedSet); // Output:
+•	
+•	        // 3. CopyOnWriteArraySet (Thread-Safe, Copy-on-Write)
+•	        System.out.println("\n--- CopyOnWriteArraySet Demo ---");
+•	        CopyOnWriteArraySet<Integer> cowSet = new CopyOnWriteArraySet<>();
+•	        List<Integer> initialNums = List.of(1, 2, 3, 4, 5);
+•	        cowSet.addAll(initialNums);
+•	        System.out.println("Initial CopyOnWriteArraySet: " + cowSet);
+•	
+•	        // Demonstrate stable iteration
+•	        System.out.println("Iterating CopyOnWriteArraySet while modifying:");
+•	        for (Integer num : cowSet) { // Iterator sees a snapshot
+•	            System.out.println("Processing: " + num);
+•	            if (num == 3) {
+•	                cowSet.add(6); // This modification won't be seen by the current iterator
+•	            }
+•	        }
+•	        System.out.println("CopyOnWriteArraySet after loop (reflects modification): " + cowSet); // Output:
+•	        // Note: '6' was added but not printed during the loop's iteration.
+•	
+•	        // Demonstrate Weakly Consistent iteration of ConcurrentSkipListSet for comparison
+•	        System.out.println("\n--- ConcurrentSkipListSet Weak Consistency Demo ---");
+•	        ConcurrentSkipListSet<Integer> cslSet = new ConcurrentSkipListSet<>();
+•	        cslSet.addAll(initialNums);
+•	        System.out.println("Initial ConcurrentSkipListSet: " + cslSet);
+•	
+•	        System.out.println("Iterating ConcurrentSkipListSet while modifying:");
+•	        for (Integer num : cslSet) { // Iterator might or might not reflect modifications
+•	            System.out.println("Processing: " + num);
+•	            if (num == 5) {
+•	                cslSet.add(6); // Might or might not be seen
+•	            }
+•	        }
+•	        System.out.println("ConcurrentSkipListSet after loop: " + cslSet); // Output may or may not include 6 in the loop's printout
+•	
+•	
+•	        // 4. Immutable Sets (Java 9+)
+•	        Set<Integer> immutableSet = Set.of(1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11); // No limit for Set.of()
+•	        System.out.println("\nImmutable Set (Set.of): " + immutableSet);
+•	        // immutableSet.add(12); // Throws UnsupportedOperationException
+•	    }
+•	}
+8. Queue Interface and Its Implementations
+The Queue interface is designed for holding elements prior to processing, adhering to the FIFO (First-In, First-Out) principle.
+•	Key Operations: 
+o	Enqueue: Adding elements to the end (tail) of the queue. (Methods: add(), offer())
+o	Dequeue: Removing elements from the front (head) of the queue. (Methods: remove(), poll())
+o	Peek: Examining the element at the front (head) of the queue without removing it. (Methods: element(), peek())
+•	Behavior on Full/Empty: 
+o	add(e): Inserts e. Throws IllegalStateException if the queue is full.
+o	offer(e): Inserts e. Returns false if the queue is full, without throwing an exception.
+o	remove(): Removes head. Throws NoSuchElementException if the queue is empty.
+o	poll(): Removes head. Returns null if the queue is empty, without throwing an exception.
+o	element(): Retrieves head. Throws NoSuchElementException if empty.
+o	peek(): Retrieves head. Returns null if empty.
+8.1. LinkedList (as Queue)
+•	LinkedList can be used to implement Queue behavior effectively because it supports efficient insertions and deletions at both ends.
+•	It provides methods like addLast() (enqueue), removeFirst() (dequeue), and getFirst() (peek).
+•	Coding Examples: (See LinkedList section for demo LinkedList acting as Queue)
+8.2. PriorityQueue
+•	Key Feature: PriorityQueue orders its elements based on their natural ordering (if they implement Comparable) or by a custom Comparator provided at creation. The element with the highest priority (lowest value in natural order) is always at the head of the queue.
+•	Behavior: It does not maintain insertion order and the elements are not internally sorted. Only the head element is guaranteed to be the highest priority.
+•	Nulls: Does not allow null elements.
+•	Internal Implementation: PriorityQueue is typically implemented using a Min-Heap.
+o	Min-Heap: A complete binary tree where the value of each node is less than or equal to the values of its children. This property ensures that the smallest element is always at the root (top) of the heap.
+•	Time Complexity:
+o	add() / offer() (insertion): O(log n) (due to maintaining heap property).
+o	poll() / remove() (deletion): O(log n) (due to removing root and re-heapifying).
+o	peek() / element() (retrieval without removal): O(1).
+•	Not Synchronized: PriorityQueue is not thread-safe.
+•	Coding Examples:
+•	import java.util.PriorityQueue;
+•	import java.util.Queue;
+•	import java.util.Comparator;
+•	
+•	public class PriorityQueueDemo {
+•	    public static void main(String[] args) {
+•	        // 1. PriorityQueue with Natural Ordering (Integers - lowest first)
+•	        Queue<Integer> pq = new PriorityQueue<>();
+•	        pq.add(15);
+•	        pq.add(10);
+•	        pq.add(30);
+•	        pq.add(5);
+•	        System.out.println("PriorityQueue (elements not sorted internally, only head is priority): " + pq); // Output: (order varies)
+•	
+•	        System.out.println("Peek: " + pq.peek()); // Output: 5 (lowest value, highest priority)
+•	
+•	        System.out.println("\nElements removed from PriorityQueue (order of priority):");
+•	        while (!pq.isEmpty()) {
+•	            System.out.println(pq.poll()); // Removes and returns the head (highest priority element)
+•	        }
+•	        // Output: 5, 10, 15, 30 (elements extracted in sorted order)
+•	
+•	        // 2. PriorityQueue with Custom Comparator (e.g., descending order)
+•	        // Pass a Comparator in the constructor
+•	        Queue<Integer> descendingPq = new PriorityQueue<>(Comparator.reverseOrder());
+•	        descendingPq.add(15);
+•	        descendingPq.add(10);
+•	        descendingPq.add(30);
+•	        descendingPq.add(5);
+•	        System.out.println("\nPriorityQueue (custom comparator - descending): " + descendingPq); // Output: (order varies, 30 is head)
+•	        System.out.println("Peek (descending): " + descendingPq.peek()); // Output: 30 (highest value, highest priority)
+•	    }
+•	}
+8.3. Deque].
+*   **Removal**: `removeFirst()`, `removeLast()`, `pollFirst()`, `pollLast()`.
+*   **Examination**: `getFirst()`, `getLast()`, `peekFirst()`, `peekLast()`.
+*   **Stack-specific**: `push()` (equivalent to `addFirst()`), `pop()` (equivalent to `removeFirst()`), `peek()` (equivalent to `peekFirst()`).
+•	Implementations: ArrayDeque and LinkedList are common implementations of the Deque interface.
+8.3.1. ArrayDeque
+•	Key Features: 
+o	Resizable Array: ArrayDeque is implemented using a resizable array (circular array). This circular array design allows for efficient additions and removals from both ends without needing to shift elements.
+o	Faster than LinkedList: Generally faster than LinkedList for most queue and stack operations due to its contiguous memory allocation.
+o	Low Memory Overhead: Does not store pointers like LinkedList nodes, so it has lower memory overhead.
+o	No Nulls: Does not allow null elements.
+o	Not Synchronized: ArrayDeque is not thread-safe.
+•	Time Complexity: O(1) for addFirst, addLast, removeFirst, removeLast, pollFirst, pollLast, peekFirst, peekLast operations on average. O(n) for operations involving searching or arbitrary index.
+8.3.2. LinkedList (as Deque)
+•	LinkedList also implements the Deque interface because it is a doubly linked list.
+•	Advantage: It is particularly efficient for insertions and deletions in the middle of the list, whereas ArrayDeque is optimized for ends.
+•	Coding Examples:
+•	import java.util.ArrayDeque;
+•	import java.util.Deque;
+•	import java.util.LinkedList;
+•	
+•	public class DequeDemo {
+•	    public            System.out.println("ArrayDeque after additions: " + arrayDeque); // Output:
+•	
+•	        // Examination at both ends
+•	        System.out.println("First element: " + arrayDeque.getFirst()); // Output: 5
+•	        System.out.println("Last element: " + arrayDeque.getLast());   // Output: 25
+•	
+•	        // Removal from both ends
+•	        System.out.println("Removed first element: " + arrayDeque.removeFirst()); // Output: 5
+•	        System.out.println("Removed last element (poll): " + arrayDeque.pollLast()); // Output: 25
+•	        System.out.println("ArrayDeque after removals: " + arrayDeque); // Output:
+•	
+•	        // Loop through remaining elements
+•	        System.out.println("Elements in ArrayDeque:");
+•	        for (Integer num : arrayDeque) {
+•	            System.out.println(num); // Output: 10, 20
+•	        }
+•	
+•	        // ArrayDeque as a Stack (LIFO)
+•	        System.out.println("\n--- ArrayDeque as Stack ---");
+•	        ArrayDeque<String> stack = new ArrayDeque<>();
+•	        stack.push("A"); // Adds to the front (top of stack)
+•	        stack.push("B");
+•	        stack.push("C");
+•	        System.out.println("Stack: " + stack); // Output: [C, B, A]
+•	        System.out.println("Pop: " + stack.pop()); // Removes from the front (top of stack)
+•	        System.out.println("Stack after pop: " + stack); // Output: [B, A]
+•	
+•	        // ArrayDeque as a Queue (FIFO)
+•	        System.out.println("\n--- ArrayDeque as Queue ---");
+•	        ArrayDeque<String> queue = new ArrayDeque<>();
+•	        queue.add("X"); // Adds to the end (tail of queue)
+•	        queue.add("Y");
+•	        queue.add("Z");
+•	        System.out.println("Queue: " + queue); // Output: [X, Y, Z]
+•	        System.out.println("Poll: " + queue.poll()); // Removes from the front (head of queue)
+•	        System.out.println("Queue after poll: " + queue); // Output: [Y, Z]
+•	
+•	        // 2. LinkedList (can also act as Deque)
+•	        Deque<Integer> linkedListDeque = new LinkedList<>();
+•	        linkedListDeque.addFirst(100);
+•	        linkedListDeque.addLast(200);
+•	        System.out.println("\nLinkedList as Deque: " + linkedListDeque); // Output:
+•	        // All other Deque methods work similarly for LinkedList
+•	        // LinkedList is preferred for insertions/deletions in the middle of the list
+•	    }
+•	}
+9. Blocking Queues (Concurrency)
+BlockingQueue is an interface that represents a thread-safe queue. Unlike standard queues, blocking queues have methods that wait for the queue to become non-empty (for consumption) or for space to become available (for production). They are extremely useful for producer-consumer problems in multi-threaded environments.
+•	Key Blocking Methods:
+o	put(e): Inserts the element e into the queue. Blocks if the queue is full until space becomes available.
+o	take(): Retrieves and removes the head of the queue. Blocks if the queue is empty until an element becomes available.
+o	offer(e, timeout, unit): Inserts e into the queue. Waits for a specified timeoutpoll,take`) operations. This means that producers and consumers block each other for any operation.
+•	When to Use: Suitable for scenarios with a small number of threads or when a high degree of contention is not expected.
+•	Coding Examples:
+•	import java.util.concurrent.ArrayBlockingQueue;
+•	import java.util.concurrent.BlockingQueue;
+•	import java.util.concurrent.TimeUnit;
+•	
+•	public class BlockingQueueDemo {
+•	    public static void main(String[] args) throws InterruptedException {
+•	        // Create an ArrayBlockingQueue with a fixed capacity
+•	        BlockingQueue<Integer> sharedQueue = new ArrayBlockingQueue<>(5); // Capacity of 5
+•	
+•	        // Producer Thread
+•	        Thread producer = new Thread(() -> {
+•	            int value = 0;
+•	            while (true) {
+•	                try {
+•	                    System.out.println("Producer produced: " + value);
+•	                    sharedQueue.put(value); // Blocks if queue is full
+•	                    value++;
+•	                    TimeUnit.MILLISECONDS.sleep(500); // Simulate work
+•	                } catch (InterruptedException e) {
+•	                    Thread.currentThread().interrupt();
+•	                    break;
+•	                }
+•	            }
+•	        });
+•	
+•	        // Consumer Thread
+•	        Thread consumer = new Thread(() -> {
+•	            while (true) {
+•	                try {
+•	                    int consumedValue = sharedQueue.take(); // Blocks if queue is empty
+•	                    System.out.println("Consumer consumed: " + consumedValue);
+•	                    TimeUnit.MILLISECONDS.sleep(1000); // Simulate work (slower consumer)
+•	                } catch (InterruptedException e) {
+•	                    Thread.currentThread().interrupt();
+•	                    break;
+•	                }
+•	            }
+•	        });
+•	
+•	        producer.start();
+•	        consumer.start();
+•	
+•	        // Let them run for some time
+•	        TimeUnit.SECONDS.sleep(10);
+•	
+•	        producer.interrupt();
+•	        consumer.interrupt();
+•	
+•	        System.out.println("\nProducer-Consumer simulation ended.");
+•	    }
+•	}
+9.2. LinkedBlockingQueue
+•	Optionally Bounded: Can be created with a fixed capacity (bounded) or without a capacity, in which case it uses Integer.MAX_VALUE as its capacity (unbounded). Unbounded queues can lead to OutOfMemoryError if producers are much faster than consumers.
+•	Backed by LinkedList: Internally uses a LinkedList.
+•	Separate Locks: Uses separate locks for enqueue and dequeue operations. This allows a producer and a consumer to operate concurrently without blocking each other, leading to **higher
+•	Ordered by Priority: Elements are ordered according to their natural ordering or a custom Comparator. The element at the head is always the highest priority.
+•	No Blocking on put (if unbounded): Since it's typically unbounded, the put() method will generally not block because space is always available.
+•	Time Complexity: add/offer/put and poll/take/remove are O(log n), peek/element are O(1) [similar to PriorityQueue].
+9.4. SynchronousQueue
+•	Zero Capacity: This queue has a capacity of at most one element.
+•	Hand-off Queue: Each insert operation must wait for a corresponding remove operation, and vice versa. It acts as a direct hand-off mechanism between a producer and a consumer.
+•	No Internal Storage: Elements are never stored internally; they are directly transferred from producer to consumer.
+•	When to Use: Useful in scenarios where you want a direct rendezvous or hand-off between two threads, ensuring that an element produced by one thread is immediately consumed by another.
+•	Coding Examples:
+•	import java.util.concurrent.BlockingQueue;
+•	import java.util.concurrent.SynchronousQueue;
+•	import java.util.concurrent.TimeUnit;
+•	
+•	public class SynchronousQueueDemo {
+•	    public static void main(String[] args) throws InterruptedException {
+•	        BlockingQueue<String> synchronousQueue = new SynchronousQueue<>();
+•	
+•	        // Producer
+•	        Thread producer = new Thread(()32]
+•	                System.out.println("Consumer has received: " + data);
+•	            } catch (InterruptedException e) {
+•	                Thread.currentThread().interrupt();
+•	            }
+•	        });
+•	
+•	        producer.start();
+•	        consumer.start();
+•	
+•	        // Give threads time to run
+•	        TimeUnit.SECONDS.sleep(2); // Output will show producer waiting, then consumer receiving
+•	    }
+•	}
+9.5. DelayQueue
+•	Delayed Elements: A thread-safe, unbounded blocking queue that holds elements only until their delay has expired.
+•	Task Scheduling: It's primarily used for task scheduling or implementing timed events, where tasks need to be executed after a certain duration.
+•	Internal Implementation: Internally uses a PriorityQueue to order elements by their remaining delay.
+•	Requirement: Elements stored in a DelayQueue must implement the java.util.concurrent.Delayed interface. The Delayed interface has two methods:
+o	long getDelay(TimeUnit unit): Returns the remaining delay associated with this object.
+o	int compareTo(Delayed o): Defines the order of elements based on their delay (shortest delay, highest priority).
+•	Time Complexity: add/offer/put and poll/take are O(log n), peek/element are O(1) [similar to PriorityQueue].
+•	Coding Examples:
+•	import java.util.concurrent.DelayQueue;
+•	import java.util.concurrent.Delayed;
+•	import java.util.concurrent.TimeUnit;
+•	import java.util.concurrent.BlockingQueue;
+•	
+•	public class DelayQueueDemo {
+•	    // Custom class for tasks with a delay
+•	    static class DelayedTask implements Delayed {
+•	        private String name;
+•	        private long startTime; // When the task is ready to be executed
+•	
+•	        public DelayedTask(String name, long delayInSeconds) {
+•	            this.name = name;
+•	            // Calculate the time when this task should be executable
+•	            this.startTime = System.currentTimeMillis() + TimeUnit.SECONDS.toMillis(delayInSeconds);startTime);
+•	        }
+•	
+•	        @Override
+•	        public String toString() {
+•	            return "DelayedTask{name='" + name + "', startTime=" + startTime + '}';
+•	        }
+•	
+•	        public String getTaskName() { return name; } //
+•	    }
+•	
+•	    public static void main(String[] args) throws InterruptedException {
+•	        BlockingQueue<DelayedTask> delayQueue = new DelayQueue<>();
+•	
+•	        // Add tasks with different delays
+•	        delayQueue.put(new DelayedTask("Task One", 5)); // 5-second delay
+•	        delayQueue.put(new DelayedTask("Task Two", 3)); // 3-second delay (highest priority)
+•	        delayQueue.put(new DelayedTask("Task Three", 10)); // 10-second delay
+•	
+•	        System.out.println("Tasks added to DelayQueue. Waiting for execution...");
+•	
+•	        // Consumer loop to take tasks
+•	        while (!delayQueue.isEmpty()) {
+•	            DelayedTask task = delayQueue.take(); // Blocks until a task's delay expires
+•	            System.out.println("Executing Task: " + task.getTaskName() + " at " + System.currentTimeMillis());
+•	        }
+•	        // Output: Task Two, then Task One, then Task Three (executed in order of shortest delay)
+•	        System.out.println("All tasks executed.");
+•	    }
+•	}
+10. Non-Blocking Concurrent Queues
+These are thread-safe queues that do not block threads for enqueue/dequeue operations. They achieve concurrency through sophisticated algorithms like Compare-And-Swap (CAS), rather than explicit locks.
+10.1. ConcurrentLinkedQueue
+•	Lock-Free, Thread-Safe: An unbounded, lock-free, thread-safe implementation of the Queue interface.
+•	High Throughput: Offers very high throughput in high-concurrency scenarios because threads do not block each other.
+•	Internal Working: Uses Compare-And-Swap (CAS) operations (similar to ConcurrentHashMap in Java 8+) internally to achieve thread safety without explicit locks.
+•	When to Use: Ideal for situations where producers and consumers operate independently at queue Queue taskQueue = new ConcurrentLinkedQueue<>(); AtomicInteger taskIdCounter = new AtomicInteger(0);
+•	    // Producer Task
+•	    Runnable producer = () -> {
+•	        for (int i = 0; i < 50; i++) {
+•	            int taskId = taskIdCounter.incrementAndGet();
+•	            taskQueue.add(taskId); // Non-blocking add
+•	            System.out.println("Producer added Task: " + taskId);
+•	            try {
+•	                TimeUnit.MILLISECONDS.sleep(10); // Simulate work
+•	            } catch (InterruptedException e) {
+•	                Thread.currentThread().interrupt();
+•	            }
+•	        }
+•	    };
+•	
+•	    // Consumer Task
+•	    Runnable consumer = () -> {
+•	        for (int i = 0; i < 50; i++) {
+•	            Integer task = taskQueue.poll(); // Non-blocking poll
+•	            if (task != null) {
+•	                System.out.println("Consumer processed Task: " + task);
+•	            } else {
+•	                System.out.println("Consumer: Queue is empty, waiting...");
+•	                try {
+•	                    TimeUnit.MILLISECONDS.sleep(50); // Wait if queue is empty
+•	                } catch (InterruptedException e) {
+•	                    Thread.currentThread().interrupt();
+•	                }
+•	                i--; // Re-try if empty
+•	            }
+•	        }
+•	    };
+•	
+•	    ExecutorService executor = Executors.newFixedThreadPool(4); // Use multiple threads
+•	    executor.submit(producer);
+•	    executor.submit(producer); // Two producers
+•	    executor.submit(consumer);
+•	    executor.submit(consumer); // Two consumers
+•	
+•	    executor.shutdown();
+•	    executor Also relies on **CAS operations** for thread safety.
+•	When to Use: When you need a highly concurrent double-ended queue where blocking is undesirable.
+•	Coding Examples:
+•	import java.util.Deque;
+•	import java.util.concurrent.ConcurrentLinkedDeque;
+•	
+•	public class ConcurrentLinkedDequeDemo {
+•	    public static void main(String[] args) {
+•	        // Non-blocking, thread-safe double ended queue
+•	        Deque<String> deque = new ConcurrentLinkedDeque<>();
+•	
+•	        // Add elements
+•	        deque.addFirst("Element 0"); // Adds to the head
+•	        deque.addLast("Element 1");  // Adds to the tail
+•	        deque.add("Element 2");      // Also adds to the tail (like addLast)
+•	
+•	        System.out.println("ConcurrentLinkedDeque: " + deque); // Output: [Element 0, Element 1, Element 2]
+•	
+•	        // Remove elements
+•	        System.out.println("Removed First: " + deque.pollFirst()); // Removes from head
+•	        System.out.println("Removed Last: " + deque.pollLast());   // Removes from tail
+•	        System.out.println("ConcurrentLinkedDeque after removals: " + deque); // Output: [Element 1]
+•	
+•	        // All other Deque methods (push, pop, peekFirst, peekLast etc.) are available and thread-safe.
+•	    }
+•	}
+11. Iterator
+The Iterator interface provides a standard way to **traverse (iterate) over elements in a collection,s position. * remove(): Removes the last element returned by next() from the underlying collection. This is the safe way to modify a collection during iteration without getting a ConcurrentModificationException, which often occurs when using a simple for-each loop and modifying the collection directly.
+•	For-Each Loop: The enhanced for loop (or for-each loop) in Java is syntactical sugar that internally uses an Iterator to traverse collections.
+•	ListIterator:
+o	An extension of Iterator specifically for List implementations.
+o	It provides additional functionalities: 
+	Bi-directional Traversal: hasPrevious(), previous().
+	Index Access: nextIndex(), previousIndex().
+	Modification: set(E e) (replaces the last element returned by next() or previous()), add(E e) (inserts an element at the current position).
+For-each Loop ---"); for (Integer num : numbers) { System.out.println(num); }
+        // 2. Using Iterator explicitly
+        System.out.println("\n--- Explicit Iterator ---");
+        Iterator<Integer> iterator = numbers.iterator(); // Get Iterator object
+        while (iterator.hasNext()) { // Check if there's a next element
+            Integer num = iterator.next(); // Get the next element and advance
+            System.out.println(num);
+        }
+
+        // 3. Safe Removal using Iterator.remove()
+        // This is how to avoid ConcurrentModificationException when modifying during iteration
+        List<Integer> listForRemoval = new ArrayList<>(List.of(1, 2, 3, 4, 5, 6, 7));
+        Iterator<Integer> removeIterator = listForRemoval.iterator();
+        System.out.println("\nOriginal list for removal: " + listForRemoval);
+
+        while (removeIterator.hasNext()) {
+            Integer num
+        List<String> fruits = new ArrayList<>(List.of("Apple", "Banana", "Cherry"));
+        java.util.ListIterator<String> listIterator = fruits.listIterator();
+
+        System.out.println("Forward iteration:");
+        while (listIterator.hasNext()) {
+            System.out.println(listIterator.next() + " (next index: " + listIterator.nextIndex() + ")");
+        }
+
+        System.out.println("Backward iteration:");
+        while (listIterator.hasPrevious()) {
+            System.out.println(listIterator.previous() + " (previous
+
+        // Using add() to insert elements
+        listIterator = fruits.listIterator(1); // Start at index 1 (between Apple and Blueberry)
+        listIterator.add("Grape"); // Add "Grape" at current position
+        System.out.println("List after ListIterator.add(): " + fruits); // Output: [Apple, Grape, Blueberry, Cherry]
+    }
+}
+```
+12. Java 8 Streams API
+The Streams API, introduced in Java 8, is a powerful feature for processing collections of objects in a functional and declarative manner.
+•	Why Streams?: 
+o	Concise Code: Reduces boilerplate code compared to traditional loops and if-else statements, leading to more minimal and readable code.
+o	Functional Programming: Adds functional programming features (like lambda expressions, method references) to Java, enabling a new style of programming.
+o	Simplified Data Processing: Simplifies common data processing tasks like filtering, mapping, and reducing.
+o	Parallelism: Allows achieving parallelism (processing data using multiple threads) without dealing with the complexities of manual multi-threading.
+12.1. Functional Programming Concepts (Prerequisites for Streams)
+Streams heavily rely on functional interfaces and lambda expressions.
+•	Lambda Expressions:
+o	An anonymous function (a function without a name) that can be passed as an argument or stored in a variable.
+o	** expressions are implementations of functional interfaces.
+•	Key Functional Interfaces in java.util.function:
+o	Predicate<T>:
+	Abstract method: boolean test(T t).
+	Purpose: Represents a boolean-valued function (i.e., a condition). Takes an input and returns true or false.
+	Default methods: and(), or(), negate() for combining or negating conditions.
+	Used in Stream operations like filter().
+o	Function<T, R>:
+	Abstract method: R apply(T t).
+	Purpose: Represents a function that takes one argument and produces a result. Used for transformations (mapping an input to an output).
+	Default methods: andThen(), compose() for chaining functions.
+	Static method: identity() which returns a Function that returns1, 169].
+o	Supplier<T>:
+	Abstract method: T get().
+	Purpose: Represents a supplier of results. Takes no input and returns a value.
+	Used in Stream operations like Stream.generate().
+o	Bi-functional Interfaces:
+	BiPredicate<T, U>: boolean test(T t, U u) (two inputs, boolean result).
+	`BiConsumer<T,all three types are the same).
+•	Method References:
+o	A shortcut for lambda expressions when the lambda expression simply calls an existing method.
+o	Syntax: ClassName::methodName, object::methodName, ClassName::new (constructor reference).
+o	Types of Method References: 
+1.	Static method: ClassName::staticMethodName (e.g., Integer::parseInt).
+2.	**import java.util.Arrays; import java.util.List; import java.util.function.BiConsumer; import java.util.function.BiFunction; import java.util.function.BiPredicate; import java.util.function.Consumer; import java.util.function.Function; import java.util.function.Predicate; import java.util.function.Supplier;
+// Define a functional interface for demonstration @FunctionalInterface // Optional annotation but good practice interface MathOperation("--- Lambda Expressions ---");
+    // Runnable (Functional Interface example)
+    Runnable taskLambda = () -> System.out.println("Hello from Lambda!"); // No class needed
+    new Thread(taskLambda).start();
+
+    // MathOperation (custom Functional Interface)
+    MathOperation addition = (a, b) -> a + b; // Lambda for addition
+    System.out.println("10 + 5 = " + addition.operate(10, 5)); // Output: 15"); // Condition: starts with 'A'
+    System.out.println("'Apple' starts with A? " + startsWithA.test("Apple")); // Output: true
+
+    // Combining Predicates
+    Predicate<String> endsWithE = s -> s.endsWith("e");
+    Predicate<String> startsWithAAndEndsWithE = startsWithA.and(endsWithE); // Logical AND
+    System.out.println("'Apple' starts with A and ends with e? " + startsWithAAndEndsWithE.test Integer> doubleThenTriple = doubleIt.andThen(tripleIt); // doubleIt first, then tripleIt
+    System.out.println("Double then Triple of 10: " + doubleThenTriple.apply(10)); // Output: 60 (10*2=20, 20*3=60)
+
+    Function<Integer, Integer> tripleThenDouble = doubleIt.compose(tripleIt); // tripleIt first, then doubleIt
+    System.out.println("Triple then Double of 10: ---");
+    Consumer<String> printConsumer = s -> System.out.println("Consumed: " + s); // Consumes a String, prints it
+    printConsumer.accept("Hello"); // Output: Consumed: Hello
+
+    // --- Supplier ---
+    System.out.println("\n--- Supplier ---");
+    Supplier<String> helloSupplier = () -> "Hello World!"; // Supplies a String
+    System.out.println("Supplied: " + helloSupplier.get()); // Output: Supplied, value) -> System.out.println(key + " -> " + value); //
+    printKeyValue.accept("Age", 30); // Output: Age -> 30
+
+    BiFunction<String, String, Integer> concatLength = (s1, s2) -> (s1 + s2).length(); //
+    System.out.println("Length of 'Hello' + 'World': " + concatLength.apply("Hello", "World")); // Output: 10
+
+    // --- Method References --- [150 to uppercase
+                                        .toList();
+    System.out.println("Uppercase Names: " + upperCaseNames); // Output: [RAM, SHYAM, GHANSHYAM]
+
+    // Constructor Reference (ClassName::new)
+    List<String> phoneNames = Arrays.asList("iPhone", "Samsung", "Google Pixel");
+    List<MobilePhone> phones = phoneNames.stream()
+                                            .map(MobilePhone::new) // Creates MobilePhone objects using constructor
+                                            .toList();
+    System.out. not executed until a terminal operation is called. You can chain multiple intermediate operations.
+3.	Terminal Operation: An operation that produces a result or a side effect, and closes the stream. Once a terminal operation is performed, the stream cannot be reused.
+•	What is a Stream? A stream is a sequence of elements that supports various operations to perform aggregate operations on data in a functional and declarative manner. It isSupplier. 5. **UsingStream.iterate()**:Stream.iterate(seed, UnaryOperator)for an **infinite ordered stream** starting from aseedand applying aUnaryOperator` to generate subsequent elements.
+•	Intermediate Operations:
+o	filter(Predicate<T>): Returns a stream consisting of elements that match the given Predicate.
+o	map(Function<T, R>): Returns a stream consisting of the results of applying the given Function to the elements of this stream.
+o	sorted(Comparator<T>) / sorted(): Returns a stream consisting of the elements of this stream, sorted according to the provided Comparator or natural order. This is a stateful operation, requiring knowledge of all elements.
+o	distinct(): Returns a stream consisting of the distinct elements. This is a stateful operation.
+o	limit(long maxSize): Returns a stream consisting of at most maxSize elements streams into a single stream. Useful when you have a stream of collections (e.g., List<List<String>>) and want to get a single stream of elements (e.g., Stream<String>).
+•	Terminal Operations:
+o	collect(Collector<T, A, R>): Performs a mutable reduction operation on the elements of this stream using a Collector to gather results into a collection or other data structure.
+o	forEach(Consumer<T>): Performs an action for each element of this stream.
+o	reduce(BinaryOperator<T>) / reduce(identity, BinaryOperator<T>): Performs a reduction on the elements of this stream, using an associative accumulation function, and returns an Optional or the reduced value.
+o	count(): Returns the count of elements in this stream.
+o	anyMatch(Predicate<T>): Returns whether any elements of this stream match the provided predicate. This is a short-circuiting operation [1 stream is empty. This is a short-circuiting operation.
+o	findAny(): Returns an Optional describing any element of this stream, or an empty Optional if the stream is empty. This is a short-circuiting operation (useful in parallel streams where finding any element is faster than findFirst()).
+o	toArray(): Returns an array containing the elements of this stream.
+o	**min(Comparator<T>) / `max(Comparatorimport java.util.Optional; import java.util.stream.Collectors; import java.util.stream.Stream;
+public class StreamDemo { public static void main(String[] args) { List numbers = Arrays.asList(1, 2, 3, 4, 5);
+    // Traditional way to count even numbers
+    int count = 0;
+    for (int i : numbers) {
+        if (i % 2 == 0) {
+            count++;
+        }
+    }
+    System// --- Creating Streams (Sources) ---
+    System.out.println("\n--- Stream Creation ---");
+    // 1. From Collection
+    List<String> names = Arrays.asList("Akshit", "Ram", "Shyam");
+    Stream<String> namesStream = names.stream(); // From ArrayList
+    System.out.println("Stream from List: " + namesStream.collect(Collectors.toList()));
+
+    // 2. From Array
+    String[] arrayNames = {"John55]
+    // Stream.generate(Supplier)
+    Stream<Integer> infiniteOnes = Stream.generate(() -> 1).limit(5); // Limit to 5 for demonstration
+    System.out.println("Infinite Stream (generate) of 1s: " + infiniteOnes.collect(Collectors.toList())); // Output:
+
+    // 5. Infinite Stream with Stream.iterate()
+    // Stream.iterate(seed, UnaryOperator)]
+    System.out.println("\n--- Intermediate Operations ---");
+    List<String> studentNames = new ArrayList<>(Arrays.asList("Akshit", "Ram", "Shyam", "Akshit", "Ghanshyam"));
+
+    // filter
+    List<String> filteredNames = studentNames.stream()
+                                            .filter(name -> name.startsWith("A")) // Names starting with 'A'
+                                            .toList();
+    System.out.println("Filtered names (starts with A): " + filteredNames); // Output: [Akshit]
+                                          .toList();
+    System.out.println("Sorted names: " + sortedNames); // Output: [Akshit, Akshit, Ghanshyam, Ram, Shyam]
+
+    // distinct
+    List<String> distinctNames = studentNames.stream()
+                                            .distinct() // Unique elements
+                                            .toList();
+    System.out.println("Distinct names: " + distinctNames); // Output: [Akshit, Ram, Shyam, Ghanshyam]
+
+    // limit
+
+    System.out.println("Numbers after skipping 2 and limiting to 3: " + skipFirstTwo); // Output:
+
+    // peek
+    List<Integer> peekedNumbers = numbers.stream()
+                                         .peek(n -> System.out.println("Processing (peek): " + n)) // Side effect
+                                         .filter(n -> n % 2 == 0)
+                                         .toList();
+    System.out.println("Filtered numbers after(String::toUpperCase) // Apply transformation
+                                          .toList();
+    System.out.println("Flattened and uppercase list: " + flattenedList); // Output: [APPLE, BANANA, CHERRY, DATE, ELDERBERRY]
+
+    // --- Terminal Operations ---
+    System.out.println("\n--- Terminal Operations ---");
+
+    // collect (toList, toSet)
+    List<Integer> collectedList = numbers.stream().collect(Collectors.toList());stream().reduce(Integer::sum); // Sum all elements
+    sum.ifPresent(s -> System.out.println("Sum of numbers: " + s)); // Output: 15
+
+    // count (already demoed)
+
+    // anyMatch, allMatch, noneMatch (short-circuiting)
+    boolean anyEven = numbers.stream().anyMatch(n -> n % 2 == 0); // Is any number even?
+    System.out.println("AnyAny (short-circuiting, returns Optional)
+    Optional<Integer> first = numbers.stream().findFirst(); // Returns first element
+    first.ifPresent(f -> System.out.println("First element: " + f)); // Output: 1
+    Optional<Integer> any = numbers.stream().findAny(); // Returns any element (can vary in parallel)
+    any.ifPresent(a -> System.out.println("Any element: " + a)); // Output: 1 (for sequential stream)
+
+    // toArray Output: 1
+    Optional<Integer> max = numbers.stream().max(Integer::compare); // Max element
+    max.ifPresent(m -> System.out.println("Max element: " + m)); // Output: 5
+
+    // --- Stream Reusability ---
+    // A stream cannot be reused after a terminal operation has been performed on it
+    Stream<String> reusableStream = studentNames.stream();
+    reusableStream.forEach(System.out::println); // Terminal operation (consumes stream)
+    // a parallel stream from a collection using `collection.parallelStream()` or by calling `parallel()` on an existing sequential stream.
+•	Benefits:
+o	Performance: Can provide significant speedup for suitable tasks by distributing the workload across multiple cores/threads.
+o	Simplicity: Achieves parallelism without the developer having to manage threads explicitly.
+•	When Effective:
+o	Large Datasets: The overhead of setting up and managing threads is justified for large amounts of data.
+o	** Guaranteed**: forEach() on a parallel stream does not guarantee the order of processing. If order is important, use forEachOrdered().
+o	Side Effects/Shared State: Be very careful with operations that involve shared mutable state (like updating a counter) or have side effects, as these can lead to incorrect results in parallel streams (e.g., cumulative sum example).
+•	sequential(): You can convert a parallel stream back to a sequential stream using the sequential() method.
+•	**Coding || n == 1) return 1; long result = 1; for (int i = 2; i <= n; i++) { result *= i; } return result; }
+•	public static void main(String[] args) {
+•	    List<Integer> numbers = IntStream.rangeClosed(1, 20000).boxed().toList(); // Large dataset
+•	
+•	    // --- 1. Sequential Stream Performance ---
+•	    long startTimeSequential = System.currentTimeMillis();
+•	    List<Long>Stream() // Convert to parallel stream
+•	                                          .map(ParallelStreamDemo::factorial)
+•	                                          .toList();
+•	    long endTimeParallel = System.currentTimeMillis();
+•	    System.out.println("Time taken with Parallel Stream: " + (endTimeParallel - startTimeParallel) + " ms"); // Output: ~10-20 ms (significantly faster)
+•	
+•	    // --- 3. Parallel Stream Order (forEach) ---
+•	    List<Integer> orderedNumbers = List.of(1, 2, 3, 4, Numbers.parallelStream().forEachOrdered(System.out::print); // Output: 12345678910
+•	    System.out.println();
+•	
+•	    // --- 5. Cumulative Sum (Demonstrates Parallel Stream Issues with Shared State/Order) ---
+•	    System.out.println("\n--- Cumulative Sum Demo ---");
+•	    List<Integer> simpleNumbers = List.of(1, 2, 3, 4, 5);
+•	    AtomicInteger sum = new AtomicInteger(0); // Use AtomicInteger for // Output: e.g., (but order of map operations can be arbitrary leading to inconsistent sum)
+•	    // The result might seem correct sometimes, but the internal process is non-deterministic,
+•	    // and `sum.addAndGet(n)` might not reflect the true "cumulative" sum due to parallel execution order.
+•	    // For correct cumulative sum, a sequential stream or specific collectors are needed.
+•	
+•	    // Correct Cumulative Sum (Sequential Stream)
+•	    List<Integer> correctCumulativeSum =9]
+•	    Stream<Integer> parallelThenSequential = orderedNumbers.parallelStream().sequential(); // Converts to sequential stream
+•	    System.out.println("Parallel then Sequential (order guaranteed):");
+•	    parallelThenSequential.forEach(System.out::print);
+•	    System.out.println();
+•	}
+}
+
+12.4. Collectors (Utility Class)
+Collectors (java.util.stream.Collectors) is a utility class that provides various predefined implementations of the Collector interface. These the collection (e.g., ArrayDeque::new).
+2.  **`joining(CharSequence delimiter, CharSequence prefix, CharSequence suffix)`**:
+    *   Concatenates the elements of a `Stream<CharSequence>` into a single `String`. You can specify a delimiter, prefix, and suffix.
+
+3.  **`summarizingInt/Long/Double(ToIntFunction<T>)`**:
+    *   Returns a `Collector` that produces a summary of numerical properties (count, sum, min, max, average) of the elements [175 default, where `K` is the grouping key and `List<T>` is the list of elements for that key.
+    *   Can take an optional `downstream Collector` to perform further reduction on each group's elements (e.g., `counting()`, `joining()`).
+    *   Can take an optional `mapFactory` to specify the type of `Map` to hold the results (e.g., `TreeMap::new`).
+
+6.  **`partitioningBy(Predicate<T>*   Applies a mapping function to each element before feeding it to a `downstream Collector`. Useful for applying `map` within another collector.
+
+8.  **`toMap(Function<T, K> keyMapper, Function<T, V> valueMapper, [BinaryOperator<V> mergeFunction], [Supplier<M> mapFactory])`**:
+    *   Collects elements into a `Map`.
+    *   `keyMapper`: Function to extract the key from each element.
+    *   `valueMapper`: Function to extract the value from;
+import java.util.Map;
+import java.util.Set;
+import java.util.stream.Collectors;
+import java.util.DoubleSummaryStatistics;
+import java.util.IntSummaryStatistics;
+import java.util.LinkedHashMap;
+import java.util.TreeMap;
+
+public class CollectorsDemo {
+    public static void main(String[] args) {
+        List<String> names = Arrays.asList("Alice", "Bob", "Charlie", "David", "Alice");
+        List<Integer> numbers = Arrays.asList(1,4]
+        Set<Integer> distinctNumbers = numbers.stream()
+                                            .collect(Collectors.toSet());
+        System.out.println("Distinct numbers: " + distinctNumbers); // Output:
+
+        // 3. Collecting to a specified Collection (e.g., ArrayDeque)
+        // Deque<String> dequeNames = names.stream().collect(Collectors.toCollection(ArrayDeque::new));
+
+        // 4. Joining0, 80, 65, 90, 75);
+        IntSummaryStatistics stats = scores.stream()
+                                            .collect(Collectors.summarizingInt(Integer::intValue)); // Summarize Integer values
+        System.out.println("\nScore Statistics: " + stats); // Output: IntSummaryStatistics{count=5, sum=360, min=50, average=72.000000, max=90}
+        System.out.println("Count: " + stats", "world", "java", "stream", "collecting");
+
+        // Group by word length
+        Map<Integer, List<String>> groupedByLength = words.stream()
+                                                            .collect(Collectors.groupingBy(String::length)); // Classifier: String::length
+        System.out.println("\nGrouped by Length: " + groupedByLength);
+        // Output: {4=[java], 5=[hello, world], 6=[stream], 10=[collecting]}
+
+        stream collector)
+        Map<Integer, String> joinedByLength = words.stream()
+                                                    .collect(Collectors.groupingBy(String::length, Collectors.joining(", "))); // Downstream: joining()
+        System.out.println("Joined by Length: " + joinedByLength);
+        // Output: {4=java, 5=hello, world, 6=stream, 10=collecting}
+
+        // Group by length into a TreeMap (mapFactory)
+        Map77]
+        Map<Boolean, List<String>> partitionedByLength = words.stream()
+                                                                .collect(Collectors.partitioningBy(s -> s.length() > 5)); // Predicate
+        System.out.println("\nPartitioned by length > 5: " + partitionedByLength);
+        // Output: {false=[hello, world, java], true=[stream, collecting]}
+
+        // 8. Mapping and Collecting (apply mapping before collecting)
+        List<String> mappedAnd
+        Map<String, Integer> fruitLengthMap = fruits.stream()
+                                                    .collect(Collectors.toMap(
+                                                        Function.identity(), // Key mapper: fruit itself
+                                                        String::length // Value mapper: fruit's length
+                                                    ));
+        System.out.println("\nFruit Length Map: " + fruitLengthMap); // Output: {Apple=5, Banana=6, Cherry=6}
+
+        // toMap with merge function (for duplicate keys)
+        List<: " + wordCounts); // Output: {apple=2, banana=1, cherry=1}
+
+        // toMap with map factory (e.g., LinkedHashMap to maintain order)
+        Map<String, Integer> orderedFruitLengthMap = fruits.stream()
+                                                            .collect(Collectors.toMap(
+                                                                Function.identity(),
+                                                                String::length,
+                                                                (oldValue, newValue) -> oldValue, // Just take the old value on collision
+                                                                LinkedHashMap::new // Specify LinkedHashMap [ large datasets compared to `IntStream` (primitive stream).
+•	Types: Java provides three specialized primitive stream interfaces: IntStream, LongStream, and DoubleStream.
+•	Creation:
+o	From Arrays: Arrays.stream(int[] array).
+o	Directly: IntStream.of(elements...), LongStream.of(), DoubleStream.of().
+o	Ranges: 
+	IntStream.range(startInclusive (e.g.,IntStream) to a stream of their corresponding wrapper types (e.g.,Stream`).
+o	mapToInt(), mapToLong(), mapToDouble(): Converts a generic Stream (e.g., Stream<String>) to a primitive stream.
+•	Specific Terminal Operations: Primitive streams also have specialized terminal operations like sum(), average(), min(), max(), and summaryStatistics() that directly return primitive values or Optional ofDemo { public static void main(String[] args) { // 1. Creating IntStream from an array int[] intArray = {1, 2, 3, 4, 5}; IntStream intStreamFromArray = Arrays.stream(intArray); System.out.println("IntStream from array: " + intStreamFromArray.boxed().toList()); // Boxed to print
+•	    // 2. IntStream.range() and IntStream.rangeClosed()
+•	    ]
+•	                                            .boxed()
+•	                                            .toList();
+•	    System.out.println("IntStream.rangeClosed(1, 5): " + rangeClosedList); // Output:
+•	
+•	    // 3. IntStream.of()
+•	    IntStream directIntStream = IntStream.of(10, 20, 30);
+•	    System.out.println("IntStream.of(10, 20, 30): " + directIntStream.boxed().toList());
+•	
+•	    // Terminal Operations for Primitive Streams ---
+•	    System.out.println("\n--- Primitive Stream Terminal Operations ---");
+•	    IntStream numbersStream = IntStream.of(1, 2, 3, 4, 5, 6, 7, 8, 9, 10);
+•	
+•	    // sum()
+•	    System.out.println("Sum: " + numbersStream.sum()); // Output: 55
+•	    // Stream is now closed!
+•	
+•	    numbersStream = IntStream.of            // max() and min()
+•	    OptionalInt max = numbersStream.max();
+•	    max.ifPresent(m -> System.out.println("Max: " + m)); // Output: 10
+•	
+•	    numbersStream = IntStream.of(1, 2, 3, 4, 5, 6, 7, 8, 9, 10);
+•	    // summaryStatistics()
+•	    IntSummaryStatistics stats = numbersStream.summaryStatistics();
+•	    System.out.println("Summary Statistics: " + stats); n -> n
+•	    System.out.println("Mapped to IntStream: " + mappedToInt.boxed().toList());
+•	
+•	    // boxed (IntStream to Stream<Integer>)
+•	    Stream<Integer> boxedStream = IntStream.of(21, 22, 23)
+•	                                            .boxed(); // Convert to Stream<Integer>
+•	    System.out.println("Boxed IntStream: " + boxedStream.toList());
+•	}
+}
+
