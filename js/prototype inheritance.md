@@ -1,37 +1,57 @@
-**Prototype Inheritance**
+**Prototype inheritance** is a key concept in JavaScript and a few other programming languages, where objects can inherit properties and methods directly from other objects. This forms the basis for sharing behavior and code reuse, as opposed to class-based inheritance found in languages like Java or C++.
 
--   Objects inherit properties/methods from their prototype.
+### How Prototype Inheritance Works
 
--   Example:
+In JavaScript:
+- Every object has an internal property called `[[Prototype]]` (accessible using `__proto__` in most environments).
+- When you try to access a property or method on an object, and it doesn't exist on that object, JavaScript automatically looks for it on the object's prototype.
+- This chain of searching for properties up the prototype chain is called the **prototype chain**.
 
-> function Person(name) {
->
-> this.name = name;
->
-> }
->
-> Person.prototype.greet = function() {
->
-> return \`Hello, \${this.name}\`;
->
-> };
->
-> const user5 = new Person(\"Charlie\");
->
-> console.log(user5.greet()); // \"Hello, Charlie\"
+### Example
 
-**\_\_proto\_\_ vs prototype**
+```javascript
+// Create a prototype object
+const animal = {
+  eats: true,
+  walk() {
+    console.log('Animal walks');
+  }
+};
 
-  ------------------------------------------------------------------------------
-  **Feature**   **\_\_proto\_\_**            **prototype**
-  ------------- ---------------------------- -----------------------------------
-  Type          Property of an object        Property of a function
+// Create a new object inheriting from animal
+const dog = Object.create(animal);
+dog.bark = function() {
+  console.log('Woof!');
+};
 
-  Purpose       Links object to its          Defines properties/methods for
-                prototype                    future objects
+console.log(dog.eats); // true (inherited from animal)
+dog.walk();            // Animal walks (inherited from animal)
+dog.bark();            // Woof! (dog's own method)
+```
 
-  Usage         obj.\_\_proto\_\_            Function.prototype
+### Using Constructor Functions
 
-  Example       obj.\_\_proto\_\_ ===        Constructor.prototype.method =
-                Constructor.prototype        function() {\...}
-  ------------------------------------------------------------------------------
+```javascript
+function Person(name) {
+  this.name = name;
+}
+Person.prototype.greet = function() {
+  console.log("Hello, " + this.name);
+};
+
+const alice = new Person("Alice");
+alice.greet(); // Hello, Alice
+```
+
+### Key Points
+
+- **Objects inherit from other objects** rather than from classes.
+- Prototypes enable property/method sharing.
+- You can set an object’s prototype using `Object.create`, `Object.setPrototypeOf`, or constructor functions with the `new` keyword.
+
+### Why Use Prototype Inheritance?
+
+- **Memory efficiency:** Shared methods are stored once on the prototype rather than on every object instance.
+- **Dynamic sharing:** Modifying the prototype affects all inheriting objects.
+
+If you want a deeper dive or have a specific question about prototype inheritance, feel free to ask!
