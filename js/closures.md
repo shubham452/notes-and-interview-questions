@@ -1,25 +1,27 @@
 ### **Notes on Closures in JavaScript**
 
 1.  **Definition of a Closure**
+   A **closure** is a function that **remembers the variables from its
+outer scope** even after the outer function has finished executing.
     *   In simple terms, a **closure** means that a **function along with its lexical environment forms a closure**.
     *   It is described as a **function bundled together with its surrounding state or lexical environment**.
     *   This implies that a function remembers its lexical scope even when it is executed outside that scope.
 
-2.  **Lexical Environment / Lexical Scope**
+3.  **Lexical Environment / Lexical Scope**
     *   **Lexical scope** refers to **where a function or variable is physically present in the code**. It's the environment in which the code is written or defined.
     *   Every function and block has its own lexical scope, and these scopes can be nested.
     *   When a function is defined, it "remembers" its lexical environment (i.e., the variables and functions that were available in its scope at the time of its creation).
 
-3.  **Core Concept: Remembering the Lexical Environment**
+4.  **Core Concept: Remembering the Lexical Environment**
     *   The most significant aspect of closures is that **even after an outer function's execution context has finished and conceptually "disappeared," the inner function (the closure) still retains a reference to the variables in its parent's lexical scope**.
     *   This means that the inner function can **access and manipulate** these outer variables even when it's invoked much later and from a different part of the code.
 
-4.  **How Closures Form and Behave**
+5.  **How Closures Form and Behave**
     *   When an inner function is returned from an outer function, it doesn't just return the function's code; it returns the function **along with its entire lexical environment**.
     *   This "bundle" of function code and its preserved lexical scope is what constitutes the closure.
     *   The variables from the outer scope are not just passed by value; the closure holds a **reference** to these variables, meaning if their value changes, the closure will see the updated value.
 
-5.  **Importance and Use Cases of Closures**
+6.  **Importance and Use Cases of Closures**
     *   Closures are a **fundamental concept in JavaScript** and are the basis for many powerful patterns.
     *   They enable functionalities like **currying** (transforming a function that takes multiple arguments into a sequence of functions that each take a single argument) and **higher-order functions**.
     *   They are crucial for **module design patterns** and for achieving **data privacy or encapsulation** (hiding private variables and functions from the global scope).
