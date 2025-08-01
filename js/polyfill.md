@@ -301,4 +301,75 @@ setInterval(logThrottled, 200); // logs once every ~1s
 
 ---
 
-Let me know if you'd like this in a downloadable `.js` file or want these structured for interview flashcards!
+Here are **simplified versions** of `slice` and `splice` polyfills that are beginner-friendly and still functionally correct for basic use cases:
+
+---
+
+## ✅ Simple `Array.prototype.slice` Polyfill
+
+```javascript
+Array.prototype.mySlice = function(start = 0, end = this.length) {
+  const result = [];
+
+  for (let i = start; i < end && i < this.length; i++) {
+    if (i >= 0) result.push(this[i]);
+  }
+
+  return result;
+};
+```
+
+### ▶ Example:
+
+```javascript
+const arr = [10, 20, 30, 40];
+console.log(arr.mySlice(1, 3)); // [20, 30]
+```
+
+---
+
+## ✅ Simple `Array.prototype.splice` Polyfill
+
+```javascript
+Array.prototype.mySplice = function(start, deleteCount, ...itemsToAdd) {
+  const removed = [];
+
+  // Remove items
+  for (let i = start; i < start + deleteCount; i++) {
+    removed.push(this[i]);
+  }
+
+  // Create new array with inserted items
+  const left = this.slice(0, start);
+  const right = this.slice(start + deleteCount);
+  const newArr = left.concat(itemsToAdd, right);
+
+  // Update original array
+  this.length = 0;
+  for (let i = 0; i < newArr.length; i++) {
+    this.push(newArr[i]);
+  }
+
+  return removed;
+};
+```
+
+### ▶ Example:
+
+```javascript
+const arr = [1, 2, 3, 4, 5];
+const removed = arr.mySplice(2, 2, 99);
+console.log(arr);      // [1, 2, 99, 5]
+console.log(removed);  // [3, 4]
+```
+
+---
+
+These versions skip handling edge cases like:
+
+* negative indexes,
+* large or missing `deleteCount`,
+* sparse arrays.
+
+Would you like a version that includes full edge case handling too?
+
