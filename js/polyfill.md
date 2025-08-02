@@ -89,6 +89,7 @@ Function.prototype.myApply = function (context = {}, argsArr = []) {
 };
 
 // Test
+function greet(city) { return `${this.name} from ${city}`; }
 console.log(greet.myApply({ name: 'Shubham' }, ['Mumbai'])); // Shubham from Mumbai
 ```
 
@@ -109,6 +110,7 @@ Function.prototype.myBind = function (context = {}, ...args) {
 };
 
 // Test
+function greet(city) { return `${this.name} from ${city}`; }
 const bound = greet.myBind({ name: 'Shubham' }, 'Bangalore');
 console.log(bound()); // Shubham from Bangalore
 ```
