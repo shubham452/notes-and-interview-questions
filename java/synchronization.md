@@ -170,7 +170,7 @@ public class Counter {
 When this `Counter` class is used with the `MyThread` and `Test` classes previously discussed, the output for "Finally Counter's count:" will **consistently be 2000**. This is because the `synchronized` keyword prevents the **race condition** by ensuring that concurrent threads do not access and modify the shared `count` variable simultaneously in an unpredictable manner.
 
 The video explains that both making a **method synchronized** or using a **synchronized block** achieve the goal of **mutual exclusion**, which means that multiple threads cannot simultaneously access the **critical section** (the part of the code where shared resources are accessed or modified).
-```
+
 This version also ensures that the "Finally Counter's count:" consistently outputs **2000** when run with the `Test` class.
 *   **Key Terminology**
     *   **Critical Section**:
@@ -183,3 +183,4 @@ This version also ensures that the "Finally Counter's count:" consistently outpu
         *   This is the **condition achieved by `synchronized`**, where **only one thread can access the critical section at a time**, thereby preventing multiple threads from simultaneously modifying shared resources.
         *   It ensures that threads "mutually exclude" each other from concurrently executing the critical section.
         *   By using `synchronized`, you achieve mutual exclusion, which in turn prevents race conditions and ensures correct, predictable results.
+```
