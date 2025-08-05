@@ -40,6 +40,131 @@ Here are notes on synchronization, drawing from the provided sources and illustr
             ```
         *   The `synchronized (this)` block ensures that for a particular `Counter` instance, only one thread can execute the `count++` line at a time. If you have multiple `Counter` objects, their operations will be independent.
 
+Based on the sources, here are the code examples illustrating the concept of synchronization, including both the problematic unsynchronized version and the synchronized solutions.
+
+### 1. `Counter` Class (Initial - Unsynchronized)
+
+This class holds the shared resource (`count`) that multiple threads will try to modify concurrently.
+
+```java
+// Counter.java
+public class Counter {
+    private int count = 0; // The shared resource
+
+    public void increment() { // This method accesses and modifies the shared 'count'
+        count++; // This is the critical section
+    }
+
+    public int getCount() { // Method to retrieve the current count
+        return count;
+    }
+}
+```
+
+### 2. `MyThread` Class
+
+This class defines a thread that will repeatedly call the `increment()` method on a `Counter` object. Multiple instances of `MyThread` will share a single `Counter` object to demonstrate the synchronization problem.
+
+```java
+// MyThread.java
+public class MyThread extends Thread {
+    private Counter counter; // Field to hold the shared Counter object
+
+    // Constructor to receive and set the shared Counter object
+    public MyThread(Counter counter) {
+        this.counter = counter;
+    }
+
+    @Override
+    public void run() {
+        // Loop to call increment() 1000 times
+        for (int i = 0; i < 1000; i++) {
+            counter.increment(); // Calling the increment method on the shared Counter
+        }
+    }
+}
+```
+
+### 3. `Test` Class (Demonstrating the Race Condition - Unsynchronized)
+
+This `Test` class creates a single `Counter` object and two `MyThread` objects, both sharing the *same* `Counter`. It then starts both threads and waits for them to complete before printing the final count.
+
+```java
+// Test.java
+public class Test {
+    public static void main(String[] args) throws InterruptedException {
+        // Create a single Counter object
+        Counter counter = new Counter();
+
+        // Create two MyThread objects, both sharing the SAME Counter object
+        MyThread t1 = new MyThread(counter);
+        MyThread t2 = new MyThread(counter);
+
+        // Start both threads
+        t1.start();
+        t2.start();
+
+        // Wait for both threads to finish execution
+        t1.join();
+        t2.join();
+
+        // Print the final count
+        System.out.println("Finally Counter's count: " + counter.getCount());
+        // Expected: 2000 (1000 from t1 + 1000 from t2)
+        // Actual (without synchronization): Often less than 2000 (e.g., 1846, 1764), and varies
+        // This unpredictable outcome due to concurrent access is a Race Condition
+    }
+}
+```
+
+### 4. `Counter` Class (Synchronized Method Solution)
+
+To fix the race condition and ensure consistent results, the `increment()` method in the `Counter` class is made `synchronized`. This ensures that **only one thread can execute this method on a given `Counter` object at any time**, achieving **mutual exclusion**.
+
+```java
+// Counter.java (with synchronized method)
+public class Counter {
+    private int count = 0;
+
+    // The 'synchronized' keyword ensures mutual exclusion for this method
+    public synchronized void increment() {
+        count++; // Only one thread can execute this critical section at a time
+    }
+
+    public int getCount() {
+        return count;
+    }
+}
+```
+When running the `Test` class with this `Counter` class, the output for "Finally Counter's count:" will consistently be **2000**.
+
+### 5. `Counter` Class (Synchronized Block Solution)
+
+If only a specific part of a method needs to be protected, you can use a `synchronized` block. The `synchronized (this)` syntax locks on the current instance of the `Counter` object, ensuring that only one thread can execute the code within that block at a time for that specific instance.
+
+```java
+// Counter.java (with synchronized block)
+public class Counter {
+    private int count = 0;
+
+    public void increment() {
+        // ... potentially other code that doesn't need synchronization ...
+
+        // Synchronized block: 'this' refers to the current Counter instance
+        // Only one thread can execute this block at a time for this instance
+        synchronized (this) {
+            count++; // This is the critical section protected by the lock
+        }
+
+        // ... potentially other code that doesn't need synchronization ...
+    }
+
+    public int getCount() {
+        return count;
+    }
+}
+```
+This version also ensures that the "Finally Counter's count:" consistently outputs **2000** when run with the `Test` class.
 *   **Key Terminology**
     *   **Critical Section**:
         *   This refers to the **part of your program where shared resources are accessed or modified**. This is the code that needs protection from simultaneous access by multiple threads.
