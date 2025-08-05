@@ -142,27 +142,34 @@ When running the `Test` class with this `Counter` class, the output for "Finally
 
 If only a specific part of a method needs to be protected, you can use a `synchronized` block. The `synchronized (this)` syntax locks on the current instance of the `Counter` object, ensuring that only one thread can execute the code within that block at a time for that specific instance.
 
+Yes, in the video, after demonstrating the `synchronized (this)` block, it is suggested to make the entire method `public synchronized void increment()` for a cleaner approach.
+
+Here is the `Counter` class with the `increment()` method made `synchronized`, as shown in the video:
+
+### `Counter` Class (with Synchronized Method)
+
+This approach uses the `synchronized` keyword directly on the `increment()` method. This ensures that **only one thread can execute this `increment` method on a given `Counter` object at any time**, providing **mutual exclusion** for the critical section.
+
 ```java
-// Counter.java (with synchronized block)
+// Counter.java (with synchronized method)
 public class Counter {
-    private int count = 0;
+    private int count = 0; // The shared resource
 
-    public void increment() {
-        // ... potentially other code that doesn't need synchronization ...
-
-        // Synchronized block: 'this' refers to the current Counter instance
-        // Only one thread can execute this block at a time for this instance
-        synchronized (this) {
-            count++; // This is the critical section protected by the lock
-        }
-
-        // ... potentially other code that doesn't need synchronization ...
+    // The 'synchronized' keyword on the method ensures mutual exclusion
+    // for the entire method execution for a given object instance.
+    public synchronized void increment() {
+        count++; // This is the critical section
     }
 
-    public int getCount() {
+    public int getCount() { // Method to retrieve the current count
         return count;
     }
 }
+```
+
+When this `Counter` class is used with the `MyThread` and `Test` classes previously discussed, the output for "Finally Counter's count:" will **consistently be 2000**. This is because the `synchronized` keyword prevents the **race condition** by ensuring that concurrent threads do not access and modify the shared `count` variable simultaneously in an unpredictable manner.
+
+The video explains that both making a **method synchronized** or using a **synchronized block** achieve the goal of **mutual exclusion**, which means that multiple threads cannot simultaneously access the **critical section** (the part of the code where shared resources are accessed or modified).
 ```
 This version also ensures that the "Finally Counter's count:" consistently outputs **2000** when run with the `Test` class.
 *   **Key Terminology**
