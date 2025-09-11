@@ -347,5 +347,259 @@ scope even after execution.**
 Here are notes on **Closures in JavaScript** along with a coding example, drawing from the provided sources:
 
 ---
+# Currying Interview Questions: Comprehensive Guide
+
+## What is Currying?
+
+Currying is a functional programming technique where a function with multiple arguments is transformed into a sequence of functions, each taking a single argument. It transforms a function from callable as `f(a, b, c)` into callable as `f(a)(b)(c)`.[1][2]
+
+```javascript
+// Normal function
+function add(a, b, c) {
+    return a + b + c;
+}
+
+// Curried function
+function curriedAdd(a) {
+    return function(b) {
+        return function(c) {
+            return a + b + c;
+        }
+    }
+}
+
+// Usage
+console.log(add(1, 2, 3)); // 6
+console.log(curriedAdd(1)(2)(3)); // 6
+```
+
+## Types of Currying Interview Questions
+
+### 1. Coding Questions
+
+#### Question 1: Convert sum(2,6,1) to sum(2)(6)(1)
+
+```javascript
+function sum(a, b, c) {
+    return a + b + c;
+}
+
+// Curried version
+function sum(a) {
+    return function(b) {
+        return function(c) {
+            return a + b + c;
+        }
+    }
+}
+```
+
+**ES6 Arrow Function Version:**
+```javascript
+const sum = a => b => c => a + b + c;
+```
+
+#### Question 2: Infinite Currying - sum(1)(2)(3)(4)...(n)()
+
+```javascript
+function sum(a) {
+    return function(b) {
+        if (b) {
+            return sum(a + b);
+        }
+        return a;
+    }
+}
+
+console.log(sum(1)(2)(3)(4)()); // 10
+```
+
+**How it works:** The function recursively calls itself with the accumulated sum until no argument is passed (empty parentheses), then returns the total.[3][4]
+
+#### Question 3: Implement curry() function
+
+```javascript
+function curry(func) {
+    return function curried(...args) {
+        if (args.length >= func.length) {
+            return func.apply(this, args);
+        } else {
+            return function(...args2) {
+                return curried.apply(this, args.concat(args2));
+            }
+        }
+    }
+}
+
+// Usage
+function sum(a, b, c) {
+    return a + b + c;
+}
+
+let curriedSum = curry(sum);
+console.log(curriedSum(1, 2, 3)); // 6
+console.log(curriedSum(1)(2, 3)); // 6
+console.log(curriedSum(1)(2)(3)); // 6
+```
+
+### 2. Output-Based Questions
+
+#### Question 1: What will this output?
+
+```javascript
+function multiply(a) {
+    return (b) => {
+        return (c) => {
+            return a * b * c;
+        }
+    }
+}
+
+let result = multiply(2)(3);
+console.log(result); // What will this print?
+```
+
+**Answer:** This will print a function, not a number, because the third argument `c` hasn't been provided yet.[5]
+
+#### Question 2: Analyzing currying behavior
+
+```javascript
+function add(a) {
+    console.log('First function called with:', a);
+    return function(b) {
+        console.log('Second function called with:', b);
+        return function(c) {
+            console.log('Third function called with:', c);
+            return a + b + c;
+        }
+    }
+}
+
+let result = add(1)(2)(3);
+```
+
+**Output:**
+```
+First function called with: 1
+Second function called with: 2
+Third function called with: 3
+```
+
+### 3. Verbal/Conceptual Questions
+
+#### Question: What is the difference between Currying and Partial Application?
+
+**Currying:**
+- Transforms a function with multiple arguments into a sequence of functions, each taking a single argument
+- Always produces unary (single-argument) functions
+- `f(a, b, c)` becomes `f(a)(b)(c)`
+
+**Partial Application:**
+- Fixes some arguments of a function and produces another function with fewer arguments
+- Can produce functions with multiple arguments
+- `f(a, b, c)` with partial application of first argument becomes `f'(b, c)`
+
+```javascript
+// Currying
+const curriedAdd = a => b => c => a + b + c;
+
+// Partial Application
+function partialAdd(a, b, c) {
+    return a + b + c;
+}
+const addTen = partialAdd.bind(null, 10);
+console.log(addTen(5, 3)); // 18
+```
+
+#### Question: Why is currying useful?
+
+**Benefits of currying:**[6]
+1. **Reusability**: Create specialized functions from general ones
+2. **Function composition**: Easier to compose functions together
+3. **Partial application**: Apply arguments incrementally
+4. **Code modularity**: Break complex functions into simpler parts
+
+### 4. Advanced Questions
+
+#### Question 1: Curry with Placeholder Support
+
+```javascript
+function curry(func) {
+    return function curried(...args) {
+        const sanitizedArgs = args.slice(0, func.length);
+        const hasPlaceholder = sanitizedArgs.some(arg => arg === curry.placeholder);
+        
+        if (!hasPlaceholder && sanitizedArgs.length === func.length) {
+            return func.apply(this, sanitizedArgs);
+        }
+        
+        return function(...nextArgs) {
+            const combinedArgs = sanitizedArgs.map(
+                arg => arg === curry.placeholder && nextArgs.length 
+                    ? nextArgs.shift() : arg
+            ).concat(nextArgs);
+            return curried(...combinedArgs);
+        };
+    };
+}
+
+curry.placeholder = Symbol('_');
+
+// Usage
+const join = curry((a, b, c) => `${a}_${b}_${c}`);
+const joinWithPlaceholder = join('a', curry.placeholder, 'c');
+console.log(joinWithPlaceholder('b')); // "a_b_c"
+```
+
+#### Question 2: DOM Manipulation with Currying
+
+```javascript
+const updateElemText = id => content => {
+    document.querySelector(`#${id}`).textContent = content;
+};
+
+// Usage
+const updateHeader = updateElemText('header');
+updateHeader('New Header Text');
+
+// Or directly
+updateElemText('header')('Hello World');
+```
+
+### 5. Practical Implementation Questions
+
+#### Question: How does infinite currying work internally?
+
+**Step-by-step execution of sum(1)(2)(3)():**[3]
+
+1. `sum(1)` executes, returns function expecting `b`
+2. `sum(1)(2)` executes, returns `sum(3)` (recursive call)
+3. `sum(3)(3)` executes, returns `sum(6)` 
+4. `sum(6)()` executes with no argument, returns `6`
+
+## Common Interview Patterns
+
+### Pattern 1: Function Transformation
+- Convert normal functions to curried versions
+- Understand closure mechanics
+- Handle variable number of arguments
+
+### Pattern 2: Infinite Arguments
+- Recursive currying implementations
+- Base case identification (empty arguments)
+- Accumulator pattern usage
+
+### Pattern 3: Utility Functions
+- Generic curry function implementation
+- Placeholder support
+- Error handling and edge cases
+
+## Key Points to Remember
+
+1. **Currying transforms functions** - it doesn't call them[2]
+2. **Closures enable currying** - inner functions access outer function variables[7]
+3. **Each curried function takes one argument** and returns another function[1]
+4. **Currying enhances function composition** and reusability[6]
+5. **Partial application is different** - it fixes some arguments but may still take multiple arguments[8]
 
 
