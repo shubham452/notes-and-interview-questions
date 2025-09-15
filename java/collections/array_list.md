@@ -281,3 +281,111 @@ import java.util.ArrayList;
 import java.util.List;
 // For reflection to check capacity (educational purpose only, not for production code)
 import java.
+
+### What's an ArrayList?
+
+An **ArrayList** is a dynamic array in Java, which means it can grow and shrink in size as needed. It's part of the Java Collections Framework and provides a resizable array implementation of the `List` interface. Unlike a traditional array, you don't need to specify its size beforehand. It's a great choice when you need a list that you'll be adding or removing elements from frequently, or when you don't know the exact number of elements you'll need to store.
+
+\<br\>
+
+-----
+
+\<br\>
+
+### Common ArrayList Methods
+
+Here are some of the most commonly used `ArrayList` methods, with their syntax and a brief example for each.
+
+| Method | Syntax | Description | Example |
+| :--- | :--- | :--- | :--- |
+| **`add()`** | `boolean add(E e)`\<br\>`void add(int index, E e)` | Adds an element `e` to the end of the list. The second syntax adds `e` at a specific `index`. | `ArrayList<String> fruits = new ArrayList<>();`\<br\>`fruits.add("Apple");`\<br\>`fruits.add(0, "Banana");` |
+| **`get()`** | `E get(int index)` | Returns the element at the specified `index`. | `String fruit = fruits.get(1);` |
+| **`set()`** | `E set(int index, E e)` | Replaces the element at the specified `index` with `e`. | `fruits.set(1, "Cherry");` |
+| **`remove()`** | `E remove(int index)`\<br\>`boolean remove(Object o)` | Removes the element at the specified `index` or removes the first occurrence of the specified `Object o`. | `fruits.remove(0);`\<br\>`fruits.remove("Apple");` |
+| **`size()`** | `int size()` | Returns the number of elements in the list. | `int count = fruits.size();` |
+| **`clear()`** | `void clear()` | Removes all elements from the list. | `fruits.clear();` |
+| **`contains()`** | `boolean contains(Object o)` | Returns `true` if the list contains the specified `Object o`, otherwise returns `false`. | `boolean hasBanana = fruits.contains("Banana");` |
+| **`indexOf()`** | `int indexOf(Object o)` | Returns the index of the first occurrence of `Object o`, or `-1` if the element is not found. | `int index = fruits.indexOf("Cherry");` |
+| **`isEmpty()`** | `boolean isEmpty()` | Returns `true` if the list has no elements, otherwise returns `false`. | `boolean is_empty = fruits.isEmpty();` |
+
+\<br\>
+
+-----
+
+\<br\>
+
+### Other Useful Methods
+
+Here are a few other methods that are helpful for more advanced operations.
+
+| Method | Syntax | Description | Example |
+| :--- | :--- | :--- | :--- |
+| **`addAll()`** | `boolean addAll(Collection<? extends E> c)`\<br\>`boolean addAll(int index, Collection<? extends E> c)` | Appends all elements from a given collection `c` to the end of the list. The second syntax adds them starting at a specific `index`. | `ArrayList<String> moreFruits = new ArrayList<>();`\<br\>`moreFruits.add("Grapes");`\<br\>`fruits.addAll(moreFruits);` |
+| **`removeAll()`** | `boolean removeAll(Collection<?> c)` | Removes from this list all elements that are also contained in the specified collection `c`. | `fruits.removeAll(moreFruits);` |
+| **`iterator()`** | `Iterator<E> iterator()` | Returns an `Iterator` over the elements in the list in proper sequence. | `Iterator<String> it = fruits.iterator();`\<br\>`while(it.hasNext()) {<br> &nbsp; System.out.println(it.next());<br>}` |
+| **`toArray()`** | `Object[] toArray()`\<br\>`<T> T[] toArray(T[] a)` | Converts the `ArrayList` into a standard array. | `Object[] arr = fruits.toArray();`\<br\>`String[] strArr = fruits.toArray(new String[0]);` |
+
+\<br\>
+
+-----
+
+\<br\>
+
+### A Complete Example
+
+Let's put it all together in a single program to see how these methods interact.
+
+```java
+import java.util.ArrayList;
+
+public class ArrayListExample {
+    public static void main(String[] args) {
+        // 1. Create an ArrayList
+        ArrayList<String> animals = new ArrayList<>();
+
+        // 2. Add elements
+        animals.add("Dog");
+        animals.add("Cat");
+        animals.add("Mouse");
+        animals.add(1, "Tiger"); // Add "Tiger" at index 1
+
+        System.out.println("Initial list: " + animals);
+
+        // 3. Get the size and an element
+        System.out.println("Size of the list: " + animals.size());
+        System.out.println("Element at index 2: " + animals.get(2));
+
+        // 4. Check for an element's existence and index
+        System.out.println("Contains 'Cat'? " + animals.contains("Cat"));
+        System.out.println("Index of 'Dog': " + animals.indexOf("Dog"));
+
+        // 5. Modify an element
+        animals.set(2, "Lion");
+        System.out.println("List after setting index 2: " + animals);
+
+        // 6. Remove elements
+        animals.remove("Dog"); // Removes "Dog"
+        animals.remove(0);    // Removes element at index 0 (which is "Tiger")
+        System.out.println("List after removing elements: " + animals);
+
+        // 7. Clear the entire list
+        animals.clear();
+        System.out.println("List after clearing: " + animals);
+        System.out.println("Is the list empty? " + animals.isEmpty());
+    }
+}
+```
+
+**Output of the code:**
+
+```
+Initial list: [Dog, Tiger, Cat, Mouse]
+Size of the list: 4
+Element at index 2: Cat
+Contains 'Cat'? true
+Index of 'Dog': 0
+List after setting index 2: [Dog, Tiger, Lion, Mouse]
+List after removing elements: [Lion, Mouse]
+List after clearing: []
+Is the list empty? true
+```
